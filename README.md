@@ -24,4 +24,3 @@ The demo includes school-admin, class-teacher and separate parent portals; class
 All records are fictional and browser-local. Authentication, OTP and WhatsApp delivery are simulations. No backend service, database, billing integration, production credentials or real messaging is included.
 
 See [frontend instructions](frontend/README.md) and [actual verification results](frontend/verification/RESULTS.md) for role accounts, routes, run commands, tested behaviour and limitations. Future backend planning is documented in [backend/README.md](backend/README.md).
-

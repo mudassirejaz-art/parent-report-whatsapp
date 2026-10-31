@@ -1,0 +1,685 @@
+.school-portal-brand {
+  gap: 9px;
+  white-space: normal;
+  align-items: center;
+  letter-spacing: -0.4px;
+}
+.school-portal-brand .brand-icon {
+  margin: 0;
+  flex-shrink: 0;
+  overflow: hidden;
+  width: 39px;
+  height: 42px;
+  background: var(--portal-accent, #087f75);
+}
+.school-portal-brand .school-brand-name {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #264837;
+  overflow-wrap: anywhere;
+}
+.school-brand-name small {
+  display: block;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: #7e9386;
+  margin-top: 5px;
+}
+.brand-icon img,
+.school-monogram img,
+.report-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff;
+  padding: 3px;
+}
+.school-monogram {
+  overflow: hidden;
+}
+.sidebar nav {
+  overflow-y: auto;
+  min-height: 100px;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: #dbe7de transparent;
+}
+.sidebar-bottom {
+  padding-top: 14px;
+  flex-shrink: 0;
+}
+.sidebar .school-switch {
+  margin-top: 22px;
+}
+.sidebar .nav-label {
+  margin-top: 22px;
+}
+.life-demo {
+  font-size: 11px;
+  color: #84978a;
+  background: #edf3ec;
+  border: 1px solid #e1eae0;
+  padding: 11px 14px;
+  border-radius: 7px;
+  margin-bottom: 22px;
+}
+.scope-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #5e7e68;
+  font-size: 12px;
+  min-width: 200px;
+}
+.scope-picker select {
+  width: 100%;
+}
+.family-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.family-shortcuts .card {
+  height: 100%;
+  margin: 0;
+  padding: 20px;
+  transition:
+    border-color 0.2s,
+    translate 0.2s;
+}
+.family-shortcuts a:hover .card {
+  border-color: #78aa8b;
+  translate: 0 -2px;
+}
+.family-shortcuts svg {
+  color: var(--portal-accent, #087f75);
+}
+.family-shortcuts strong {
+  font-size: 29px;
+  color: #2e6246;
+  display: block;
+  margin: 10px 0 4px;
+  letter-spacing: -0.7px;
+}
+.family-shortcuts h3 {
+  font-size: 12px;
+}
+.family-shortcuts small {
+  font-size: 10px;
+  color: #8a9d8a;
+  display: block;
+  margin-top: 7px;
+}
+.notice-preview {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 19px 0;
+  border-bottom: 1px solid #edf2eb;
+}
+.notice-preview:last-child {
+  border: 0;
+  padding-bottom: 0;
+}
+.notice-preview div {
+  flex: 1;
+}
+.notice-preview strong {
+  font-size: 12px;
+  color: #45694c;
+}
+.notice-preview small {
+  display: block;
+  font-size: 10px;
+  color: #8da087;
+  margin-top: 5px;
+}
+.notice-preview > span:last-child {
+  color: #82a17c;
+}
+.update-dot {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  background: #b6cda4;
+  border-radius: 50%;
+}
+.update-dot.personal {
+  background: #d4ad83;
+}
+.notice-kind {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #5c8b6c;
+  font-size: 12px;
+}
+.notice-card h2,
+.diary-card h2 {
+  margin-top: 20px;
+  font-size: 21px;
+}
+.notice-card.private-note {
+  border-left: 4px solid #c7ad8c;
+}
+.notice-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.9;
+  color: #637e69;
+  margin: 15px 0;
+}
+.notice-meta {
+  font-size: 10px;
+  color: #8c9e88;
+  margin: 14px 0;
+}
+.notice-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-top: 1px solid #edf2ea;
+  padding-top: 17px;
+  margin-top: 20px;
+}
+.notice-list {
+  max-width: 1100px;
+}
+.attendance-stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.attendance-stats .card {
+  padding: 20px;
+  margin: 0;
+}
+.attendance-stats svg {
+  color: #79a284;
+}
+.attendance-stats strong {
+  display: block;
+  font-size: 29px;
+  margin: 13px 0 4px;
+  color: #356647;
+  letter-spacing: -0.8px;
+}
+.attendance-stats small {
+  font-size: 11px;
+  color: #8b9f88;
+}
+.attendance-calendar {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 24px;
+  margin-top: 17px;
+}
+.attendance-calendar > div {
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-bottom: 1px solid #edf2e9;
+  font-size: 12px;
+  color: #71866d;
+}
+.badge.present,
+.badge.approved,
+.badge.parent-checked {
+  background: #e5f3e6;
+  color: #347d47;
+}
+.badge.absent,
+.badge.declined {
+  background: #f8ebea;
+  color: #ad6561;
+}
+.badge.late,
+.badge.important {
+  background: #fff2d9;
+  color: #a77d38;
+}
+.badge.leave {
+  background: #e9edf9;
+  color: #6879a2;
+}
+.badge.open {
+  background: #e5f3ec;
+  color: #50836a;
+}
+.badge.resolved {
+  background: #eef0ec;
+  color: #819176;
+}
+.contact-guidance {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  background: #f1f6ed;
+  color: #7c9a73;
+}
+.contact-guidance svg {
+  flex-shrink: 0;
+}
+.contact-guidance p {
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 0;
+}
+.family-inbox {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr);
+  gap: 20px;
+  align-items: start;
+}
+.thread-list {
+  padding: 20px 0;
+  margin: 0;
+}
+.thread-list h2 {
+  font-size: 15px;
+  padding: 0 18px 14px;
+}
+.thread-item {
+  background: #fff;
+  border: 0;
+  border-top: 1px solid #edf2e9;
+  text-align: left;
+  padding: 18px;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.thread-item.selected {
+  background: #edf5ed;
+  box-shadow: inset 3px 0 #84ac84;
+}
+.thread-item strong {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #476c4b;
+  display: block;
+  overflow-wrap: anywhere;
+}
+.thread-item small {
+  display: block;
+  font-size: 10px;
+  line-height: 1.7;
+  color: #8ca084;
+  margin-top: 7px;
+}
+.thread-item .badge {
+  margin-left: auto;
+}
+.conversation {
+  margin: 0;
+}
+.conversation > .section-head {
+  align-items: flex-start;
+}
+.conversation-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 480px;
+  overflow: auto;
+  padding: 26px 0;
+  margin-bottom: 10px;
+}
+.chat-bubble {
+  align-self: flex-start;
+  max-width: 88%;
+  padding: 16px 18px;
+  background: #f2f6ef;
+  border: 1px solid #e5ede0;
+  border-radius: 0 12px 12px 12px;
+}
+.chat-bubble.mine {
+  align-self: flex-end;
+  background: #e7f2e8;
+  border-color: #d7e7d8;
+  border-radius: 12px 0 12px 12px;
+}
+.chat-bubble small {
+  font-size: 10px;
+  font-weight: 600;
+  color: #5c885f;
+}
+.chat-bubble p {
+  font-size: 12px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 8px 0;
+  color: #627b5e;
+}
+.chat-bubble time {
+  display: block;
+  font-size: 8px;
+  color: #97a88e;
+}
+.reply-form {
+  border-top: 1px solid #edf1e7;
+  padding-top: 20px;
+}
+.reply-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  color: #769171;
+}
+.reply-form textarea {
+  width: 100%;
+  resize: vertical;
+}
+.reply-form > .section-head {
+  margin-top: 15px;
+}
+.diary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.diary-card {
+  margin: 0;
+}
+.review-response {
+  background: #f1f6ed;
+  padding: 17px;
+  border-radius: 7px;
+  margin: 18px 0;
+  color: #6b8863;
+  font-size: 12px;
+}
+.review-response p {
+  margin-bottom: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.branding-editor {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 35px;
+  margin: 25px 0;
+}
+.logo-editor {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+.logo-upload-preview,
+.logo-placeholder {
+  width: 116px;
+  height: 116px;
+  object-fit: contain;
+  padding: 14px;
+  border: 1px solid #dfe9da;
+  border-radius: 12px;
+  background: #f5f8f1;
+}
+.logo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7d9a70;
+}
+.file-upload {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  flex-wrap: wrap;
+  max-width: 100%;
+  font-size: 12px;
+  color: #597f54;
+}
+.file-upload input {
+  font-size: 10px;
+  padding: 7px;
+  max-width: 250px;
+  display: block;
+  width: 100%;
+  margin-top: 5px;
+}
+.logo-editor small {
+  font-size: 10px;
+  color: #8d9f86;
+}
+.branding-preview {
+  margin-top: 22px;
+  border: 1px solid #e0e9da;
+  border-top: 5px solid #087f75;
+  border-radius: 9px;
+  padding: 24px;
+  background: #fafcf7;
+}
+.branding-preview img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+.branding-preview h3 {
+  font-size: 15px;
+}
+.branding-preview p {
+  font-size: 11px;
+  color: #8b9d82;
+  margin: 5px 0;
+}
+.branding-preview small {
+  font-size: 10px;
+  color: #8da182;
+  display: block;
+  margin-top: 20px;
+}
+.brand-preview-button {
+  display: inline-flex;
+  padding: 9px 14px;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 11px;
+  margin-top: 22px;
+}
+.app .btn:not(.secondary),
+.app .brand-icon,
+.app .report-logo {
+  background: var(--portal-accent, #087f75);
+  border-color: var(--portal-accent, #087f75);
+}
+.app .text-link,
+.app .sidebar nav a.active {
+  color: var(--portal-accent, #087f75);
+}
+.app .btn:not(.secondary):hover {
+  filter: brightness(0.94);
+}
+.app .report-result strong,
+.app .parent-score strong {
+  color: var(--portal-accent, #087f75);
+}
+@media (max-height: 900px) {
+  .sidebar .help-card {
+    display: none;
+  }
+  .sidebar-bottom {
+    padding-top: 4px;
+  }
+  .sidebar nav a {
+    padding-block: 9px;
+  }
+  .sidebar .school-switch {
+    margin-top: 17px;
+  }
+  .sidebar .nav-label {
+    margin-top: 19px;
+  }
+  .sidebar .signout {
+    margin-block: 12px;
+  }
+}
+@media (max-width: 1100px) {
+  .family-shortcuts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .family-inbox {
+    grid-template-columns: 1fr;
+  }
+  .thread-list {
+    max-height: 300px;
+    overflow: auto;
+  }
+  .diary-grid {
+    grid-template-columns: 1fr;
+  }
+  .attendance-stats {
+    gap: 9px;
+  }
+  .attendance-stats .card {
+    padding: 15px;
+  }
+  .branding-editor {
+    gap: 20px;
+  }
+  .school-portal-brand .school-brand-name {
+    font-size: 12px;
+  }
+}
+@media (max-width: 760px) {
+  .family-shortcuts {
+    gap: 12px;
+  }
+  .family-shortcuts .card {
+    padding: 18px;
+  }
+  .family-shortcuts strong {
+    font-size: 27px;
+  }
+  .family-shortcuts small {
+    font-size: 10px;
+    line-height: 1.6;
+  }
+  .scope-picker {
+    min-width: 0;
+    flex: 1;
+  }
+  .notice-card .section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 11px;
+  }
+  .notice-card h2,
+  .diary-card h2 {
+    font-size: 20px;
+    line-height: 1.4;
+  }
+  .notice-body {
+    font-size: 12px;
+  }
+  .notice-actions {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .notice-preview strong {
+    font-size: 12px;
+  }
+  .parent-updates .section-head {
+    align-items: flex-start;
+  }
+  .parent-updates .section-head h2 {
+    font-size: 16px;
+  }
+  .parent-updates .section-head .text-link {
+    white-space: nowrap;
+    margin-top: 4px;
+  }
+  .attendance-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .attendance-stats .card {
+    padding: 18px 14px;
+  }
+  .attendance-stats strong {
+    font-size: 26px;
+  }
+  .attendance-calendar {
+    grid-template-columns: 1fr;
+  }
+  .life-demo {
+    font-size: 10px;
+    line-height: 1.8;
+  }
+  .card > .section-head:has(.inline-actions) {
+    flex-wrap: wrap;
+  }
+  .card > .section-head > .inline-actions {
+    flex-wrap: wrap;
+  }
+  .family-inbox {
+    gap: 16px;
+  }
+  .conversation {
+    padding: 18px;
+  }
+  .conversation h2 {
+    font-size: 18px;
+  }
+  .chat-bubble {
+    max-width: 95%;
+    padding: 14px;
+  }
+  .reply-form .section-head {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .reply-form .btn {
+    font-size: 11px;
+  }
+  .branding-editor {
+    grid-template-columns: 1fr;
+  }
+  .branding-preview {
+    padding: 20px;
+  }
+  .branding-editor > .logo-editor {
+    border-bottom: 1px solid #e4ebdd;
+    padding-bottom: 20px;
+  }
+  .contact-guidance {
+    padding: 18px;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .contact-guidance p {
+    font-size: 11px;
+  }
+  .diary-card .section-head {
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .notice-kind {
+    font-size: 11px;
+  }
+  .notice-meta {
+    font-size: 10px;
+  }
+  .school-portal-brand .school-brand-name {
+    font-size: 14px;
+  }
+}
+@media print {
+  .family-shortcuts,
+  .parent-updates,
+  .life-demo {
+    display: none;
+  }
+}

@@ -1,0 +1,17 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+*.tsbuildinfo
+.npm-tool/
+npm-tool.tgz
+.pnpm-store/
+*-native.tgz
+.formatter-tool/
+formatter-tool.tgz
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.publish/

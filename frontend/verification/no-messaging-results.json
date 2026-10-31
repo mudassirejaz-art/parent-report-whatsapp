@@ -1,0 +1,18 @@
+{
+  "passed": 12,
+  "checks": [
+    "admin navigation has no messaging links",
+    "admin messaging route is removed",
+    "teacher navigation has no messaging links",
+    "teacher messaging route is removed",
+    "parent navigation has no messaging links",
+    "parent messaging route is removed",
+    "Parent profile has no contact-teacher button",
+    "School notices and private notes remain available",
+    "Class tools no longer show a parent inbox",
+    "Old class inbox route cannot open messaging",
+    "WhatsApp report simulation logs remain available",
+    "No runtime errors"
+  ],
+  "errors": []
+}

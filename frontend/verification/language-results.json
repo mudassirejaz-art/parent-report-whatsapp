@@ -1,0 +1,14 @@
+{
+  "passed": 8,
+  "checks": [
+    "Profile and form labels switch live to Roman Urdu",
+    "Translated form remains functional",
+    "Language choice persists on reload",
+    "Roman Urdu navigation opens attendance",
+    "Language uses left-to-right Roman Urdu semantics",
+    "Switching back restores English",
+    "Mobile language bar does not overflow",
+    "No runtime errors"
+  ],
+  "errors": []
+}

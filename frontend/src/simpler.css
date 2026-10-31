@@ -1,0 +1,121 @@
+.parent-essentials {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 24px;
+}
+.parent-app main {
+  max-width: 980px;
+}
+.parent-app .child-card {
+  margin-top: 5px;
+}
+.nav-more {
+  margin-top: 12px;
+  border-top: 1px solid #e6eee2;
+  padding-top: 10px;
+}
+.nav-more summary {
+  padding: 10px 13px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #71856b;
+}
+.nav-more[open] summary {
+  font-weight: 600;
+  color: #446d4d;
+}
+.workspace-more {
+  margin: -12px 0 23px;
+  font-size: 12px;
+  color: #70886b;
+}
+.workspace-more summary {
+  cursor: pointer;
+  padding: 10px 0;
+  min-height: 38px;
+}
+.workspace-more > div {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+}
+.workspace-more a {
+  padding: 8px 12px;
+  border: 1px solid #dde7d7;
+  border-radius: 7px;
+  background: white;
+  color: #63825b;
+}
+.workspace-more a.active {
+  background: #e9f3e5;
+  border-color: #90b183;
+  color: #376938;
+}
+.demo-details {
+  font-size: 10px;
+  color: #87997e;
+  margin: 0 0 18px;
+}
+.demo-details summary {
+  cursor: pointer;
+  min-height: 24px;
+}
+.demo-details .life-demo {
+  margin-top: 8px;
+}
+.parent-app .page-heading .eyebrow {
+  display: none;
+}
+.parent-app .page-heading {
+  margin-bottom: 22px;
+}
+.parent-app .parent-score {
+  margin: 20px 0;
+}
+.class-tabs {
+  margin-bottom: 12px;
+}
+@media (max-width: 760px) {
+  .parent-essentials {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+  }
+  .parent-essentials .btn {
+    white-space: normal;
+    font-size: 11px;
+    text-align: center;
+    padding: 10px 6px;
+    min-height: 46px;
+  }
+  .parent-app .page-heading h1 {
+    font-size: 27px;
+  }
+  .parent-updates .notice-preview {
+    padding: 15px 0;
+  }
+  .workspace-more > div {
+    gap: 7px;
+  }
+  .workspace-more a {
+    font-size: 11px;
+  }
+  .parent-app main {
+    padding-top: 16px;
+  }
+  .parent-app .child-card {
+    padding: 21px;
+  }
+  .parent-app .demo-notice {
+    margin-bottom: 20px;
+  }
+}
+@media print {
+  .workspace-more,
+  .parent-essentials,
+  .demo-details {
+    display: none;
+  }
+}

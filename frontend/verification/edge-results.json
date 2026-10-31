@@ -1,0 +1,23 @@
+{
+  "passed": 17,
+  "checks": [
+    "Expired onboarding token denied",
+    "Unknown onboarding token denied",
+    "Student identity mismatch rejected",
+    "Invalid Pakistan number format rejected",
+    "Guardian can explicitly decline consent",
+    "Duplicate guardian number rejected across students",
+    "Five wrong OTP attempts expire the verification token",
+    "Suspended teacher loses all workspace access",
+    "Revoked teacher assignment blocks direct class URL",
+    "Newly assigned teacher gains the activated class",
+    "Admin send permission disables teacher campaigns",
+    "Teacher creates exam with distinct subject maxima",
+    "Missing marks rejected with per-cell required errors",
+    "Unsaved mark drafts survive class navigation",
+    "Teacher marks grid scrolls within mobile page",
+    "Sample print view hides application navigation",
+    "No edge-case browser exceptions"
+  ],
+  "errors": []
+}

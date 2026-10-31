@@ -1,0 +1,17 @@
+{
+  "passed": 11,
+  "checks": [
+    "Child report is visible before updates",
+    "Repeated welcome, counters and priority cards are removed",
+    "Essential parent pages remain directly reachable",
+    "Secondary parent menu reaches profile settings",
+    "Only five class tabs are primary",
+    "Secondary class tools retain working navigation",
+    "Simplified navigation preserves class permissions",
+    "Demo explanation is collapsed by default",
+    "New navigation supports Roman Urdu",
+    "No horizontal mobile overflow",
+    "No runtime errors"
+  ],
+  "errors": []
+}

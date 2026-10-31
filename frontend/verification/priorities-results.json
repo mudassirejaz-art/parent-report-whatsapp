@@ -1,0 +1,13 @@
+{
+  "checks": [
+    "Staff retain operational priorities",
+    "Mobile parent quick navigation opens the private inbox",
+    "Unsent message draft survives reload",
+    "Read tracking clears the inbox unread indicator",
+    "School updates synchronize into another open tab",
+    "Updated mobile dashboard has no horizontal overflow",
+    "No runtime errors"
+  ],
+  "passed": 7,
+  "errors": []
+}

@@ -1,0 +1,75 @@
+.language-bar {
+  height: 38px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #eef5eb;
+  border-bottom: 1px solid #dce7d7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  z-index: 150;
+  font-size: 11px;
+  color: #55784e;
+}
+.language-bar > div {
+  display: flex;
+  gap: 3px;
+  background: white;
+  border: 1px solid #d5e1d0;
+  border-radius: 7px;
+  padding: 2px;
+}
+.language-bar button {
+  border: 0;
+  background: transparent;
+  border-radius: 4px;
+  font-size: 11px;
+  padding: 3px 10px;
+  color: #6c8562;
+}
+.language-bar button[aria-pressed="true"] {
+  background: #087f75;
+  color: white;
+}
+.language-bar small {
+  font-size: 10px;
+  color: #809276;
+  margin-left: 8px;
+}
+body {
+  padding-top: 38px;
+}
+.sidebar {
+  top: 38px;
+}
+.topbar {
+  top: 38px;
+}
+@media (max-width: 760px) {
+  .language-bar {
+    gap: 7px;
+  }
+  .language-bar small {
+    display: none;
+  }
+  .language-bar > span {
+    font-size: 10px;
+  }
+  .sidebar {
+    height: calc(100dvh - 38px);
+  }
+  .modal-backdrop {
+    padding-top: 50px;
+  }
+}
+@media print {
+  .language-bar {
+    display: none;
+  }
+  body {
+    padding-top: 0;
+  }
+}

@@ -1,0 +1,131 @@
+.priorities {
+  border-color: #d4e4d5;
+  background: #fcfef9;
+}
+.priority-count {
+  font-size: 11px;
+  color: #63896b;
+  background: #edf5e8;
+  border-radius: 20px;
+  padding: 7px 12px;
+}
+.priority-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 17px 0;
+  border-bottom: 1px solid #eaf0e5;
+}
+.priority-row:last-child {
+  border: 0;
+  padding-bottom: 0;
+}
+.priority-row > div {
+  flex: 1;
+  min-width: 0;
+}
+.priority-row strong {
+  font-size: 12px;
+  display: block;
+  color: #466b4c;
+}
+.priority-row small {
+  font-size: 10px;
+  display: block;
+  color: #84997d;
+  margin-top: 5px;
+  line-height: 1.7;
+}
+.priority-row > svg {
+  color: #82a17b;
+  flex-shrink: 0;
+}
+.priority-symbol {
+  padding: 9px;
+  border-radius: 9px;
+  background: #edf4e8;
+  color: #709266;
+  display: flex;
+  flex-shrink: 0;
+}
+.priority-symbol.urgent {
+  background: #fff0da;
+  color: #ac8245;
+}
+.unread-label {
+  display: block;
+  background: #e0eee0;
+  color: #39794e;
+  border-radius: 12px;
+  font-size: 9px;
+  text-align: center;
+  padding: 3px 6px;
+  margin-top: 7px;
+  font-weight: 600;
+}
+.message-unread {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid #e6eee0;
+  padding: 15px 0;
+  font-size: 11px;
+  color: #6f8c65;
+}
+.parent-bottom-nav {
+  display: none;
+}
+@media (max-width: 760px) {
+  .parent-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fffffff7;
+    border-top: 1px solid #dfe8db;
+    z-index: 45;
+    justify-content: space-around;
+    padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+    box-shadow: 0 -3px 20px #264b3310;
+    backdrop-filter: blur(10px);
+  }
+  .parent-bottom-nav a {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    color: #8a9d80;
+    font-size: 10px;
+    min-width: 66px;
+    padding: 4px;
+  }
+  .parent-bottom-nav a.active {
+    color: var(--portal-accent, #087f75);
+    font-weight: 650;
+  }
+  .parent-app .main-wrap {
+    padding-bottom: 80px;
+  }
+  .message-unread {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .priority-row strong {
+    font-size: 12px;
+  }
+  .priority-row {
+    gap: 10px;
+  }
+  .priorities .section-head h2 {
+    font-size: 19px;
+  }
+}
+@media print {
+  .priorities,
+  .parent-bottom-nav,
+  .message-unread {
+    display: none !important;
+  }
+}
