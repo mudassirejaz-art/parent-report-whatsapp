@@ -1,0 +1,22 @@
+{
+  "checks": [
+    "New isolated account signs in on mobile",
+    "Account page lists current and other session",
+    "Revoke another browser session while current stays signed in",
+    "Password mismatch has a clear validation message",
+    "Password change keeps current browser and refreshes same-browser tabs",
+    "Password fields clear after success",
+    "Revoked separate browser is denied",
+    "Mobile account page has no horizontal overflow",
+    "Logout clears private data from another tab",
+    "Old password rejected and new password accepted",
+    "Recovery explicitly labels local simulation",
+    "Local recovery resets password without logging in",
+    "Reset revokes all previous sessions",
+    "Reset link cannot be replayed",
+    "Final password signs in and desktop settings render",
+    "No browser runtime errors"
+  ],
+  "errors": [],
+  "passed": 16
+}

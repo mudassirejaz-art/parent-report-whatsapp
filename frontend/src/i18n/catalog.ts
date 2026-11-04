@@ -1,5 +1,37 @@
 export type Language = "en" | "ur-Latn";
 export const roman: Record<string, string> = {
+  "Account & security": "Account aur hifazat",
+  "YOUR ACCOUNT": "AAP KA ACCOUNT",
+  "Keep your school account private and in your control.":
+    "Apna school account mehfooz aur apnay control mein rakhein.",
+  "Change password": "Password badlein",
+  "Current password": "Maujooda password",
+  "New password · at least 12 characters":
+    "Naya password · kam az kam 12 huroof",
+  "Confirm new password": "Naya password dobara likhein",
+  "Update password": "Password update karein",
+  "Active sessions": "Khulay huay sessions",
+  "This browser": "Yeh browser",
+  "Another signed-in session": "Doosra khula hua session",
+  Current: "Maujooda",
+  "Sign out session": "Session band karein",
+  "Sign out all other sessions": "Baqi saray sessions band karein",
+  "Forgot password?": "Password bhool gaye?",
+  "Forgot your password?": "Apna password bhool gaye hain?",
+  "Choose a new password": "Naya password chunein",
+  "Local testing simulation": "Sirf local testing ki simulation",
+  "Account email address": "Account ka email address",
+  "Create local test link": "Local test link banayein",
+  "Reset password": "Password reset karein",
+  "Back to sign in →": "Sign in par wapas →",
+  "Request a new link": "Naya link hasil karein",
+  "Open local reset link →": "Local reset link kholein →",
+  "Changing your password signs out every other session. This browser stays signed in securely.":
+    "Password badalnay se baqi saray sessions band ho jayenge. Yeh browser mehfooz tareeqay se khula rahega.",
+  "No email is sent. Test links are displayed here and expire after 15 minutes. Use fictional accounts only.":
+    "Koi email nahi bheji jati. Test link yahan nazar aata hai aur 15 minute mein expire hota hai. Sirf farzi accounts istemal karein.",
+  "Password updated. Other sessions have been signed out.":
+    "Password update ho gaya. Baqi sessions band ho gaye hain.",
   "Reading language": "Parhnay ki zaban",
   "Interface language": "Portal ki zaban",
   "School messages stay in their original language.":

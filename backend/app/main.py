@@ -30,6 +30,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or Settings.load()
     if settings.secure_cookies and settings.local_onboarding:
         raise RuntimeError("Local verification is forbidden in production.")
+    if settings.secure_cookies and settings.local_recovery:
+        raise RuntimeError("Local password recovery is forbidden in production.")
     pool = ConnectionPool(settings.database_url, min_size=1, max_size=settings.pool_size, open=False,
                           timeout=5, kwargs={"row_factory": dict_row, "connect_timeout": 5})
 
@@ -133,13 +135,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 valid = False
             if not account or not valid:
                 raise HTTPException(401, "Email or password is incorrect.")
-            # Rotation revokes a previous session carried by the same browser.
-            previous = request.cookies.get(settings.cookie_name)
-            if previous:
-                conn.execute("select set_config('app.user_id',%s,true)", (account["id"],))
-                conn.execute("select app_private.revoke_api_session(%s)", (digest(previous),))
             token, csrf = secrets.token_urlsafe(48), secrets.token_urlsafe(32)
-            conn.execute("select app_private.create_api_session(%s,%s,%s)", (account["id"], digest(token), csrf))
+            created = conn.execute("select app_private.start_authenticated_session(%s,%s,%s,%s,%s) as ok",
+                (account["id"],hashed,digest(token),csrf,digest(request.cookies.get(settings.cookie_name,"")))).fetchone()["ok"]
+            if not created:
+                raise HTTPException(401,"Your password changed. Please sign in again.")
             actor = conn.execute("select app_private.get_api_session(%s) as data", (digest(token),)).fetchone()["data"]
         response.set_cookie(settings.cookie_name, token, max_age=8 * 60 * 60, httponly=True,
                             secure=settings.secure_cookies, samesite="strict", path="/")
@@ -326,6 +326,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     register_onboarding(app, settings, pool, database, passwords)
     from .schools import register_schools
     register_schools(app,settings,pool,database,passwords)
+    from .accounts import register_accounts
+    register_accounts(app,settings,pool,database,passwords)
     return app
 
 app = create_app()

@@ -6,7 +6,9 @@ FastAPI provides real password login, revocable sessions, school self-registrati
 
 **Start here:** [API setup, login accounts and supported workflows](API.md). The database setup and access contract are documented below.
 
-**Latest milestone:** [School registration and branding](SCHOOLS.md), with [actual verification](SCHOOLS-VERIFICATION.md): 60 API tests, 50 database assertions, 49 frontend tests and 19 school browser checks passed.
+**Account security:** [Password changes, session controls and explicitly local recovery](ACCOUNTS.md), with [verified results](ACCOUNTS-VERIFICATION.md): 75 API tests, 49 frontend tests, 50 database assertions and 16 browser checks passed.
+
+**School milestone:** [School registration and branding](SCHOOLS.md), with [actual verification](SCHOOLS-VERIFICATION.md): 60 API tests, 50 database assertions, 49 frontend tests and 19 school browser checks passed.
 
 **Guardian onboarding milestone:** Student-bound invitations, separate parent registration/sibling linking and consent withdrawal are now implemented for explicitly enabled local testing. See [ONBOARDING.md](ONBOARDING.md). No real phone verification or messaging provider is configured.
 
@@ -36,7 +38,7 @@ To use an existing PostgreSQL server instead, create a dedicated database and a 
 
 ## Data model
 
-25 domain tables plus 2 private authentication tables and private `school_logos` storage, split into two schemas. All 28 have RLS enabled.
+25 domain tables plus 2 private authentication tables and private `school_logos` storage and local `password_resets`, split into two schemas. All 29 have RLS enabled.
 
 | Area | Tables |
 | --- | --- |

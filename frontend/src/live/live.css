@@ -630,3 +630,68 @@
     width: 100%;
   }
 }
+.live-account-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+.live-account-grid h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.live-session {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line, #e3e9e7);
+}
+.live-session small {
+  display: block;
+  color: var(--muted, #687773);
+  margin-top: 6px;
+  font-size: 12px;
+}
+.live-recovery {
+  max-width: 580px;
+  margin: 60px auto;
+  padding: 20px;
+}
+.live-recovery > .brand {
+  margin-bottom: 24px;
+}
+.live-local-warning {
+  padding: 16px;
+  background: #fff7e5;
+  border: 1px solid #f2d594;
+  border-radius: 12px;
+  margin: 20px 0;
+  color: #6d4d13;
+}
+.live-local-warning p {
+  font-size: 13px;
+  margin-bottom: 0;
+}
+@media (max-width: 900px) {
+  .live-account-grid {
+    grid-template-columns: 1fr;
+  }
+  .live-header {
+    flex-wrap: wrap;
+  }
+  .live-header .live-buttons {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 480px) {
+  .live-session {
+    align-items: start;
+    flex-direction: column;
+  }
+  .live-recovery {
+    margin: 15px auto;
+  }
+}

@@ -1,5 +1,7 @@
 # ParentReport
 
+**Account security:** All connected roles can change passwords and revoke their sessions at `/workspace/account`. Explicit local-only recovery is available for fictional testing; no email delivery. See [account setup](backend/ACCOUNTS.md) and [verification](backend/ACCOUNTS-VERIFICATION.md): 75 API tests, 49 frontend tests, 50 database checks and 16 browser checks passed.
+
 **New school setup:** `/school/register` creates a separate school and first admin account. Admin School settings now persists school name/contact details, a readable accent colour and a private PostgreSQL-backed logo. See [setup](backend/SCHOOLS.md) and [verified results](backend/SCHOOLS-VERIFICATION.md): 60 API tests, 50 database checks, 49 frontend tests and 19 school browser checks passed.
 
 **New: local guardian onboarding.** Teacher-generated student invitations, separate parent registration or sibling linking, masked encrypted contacts and consent withdrawal are now available. This is explicitly local testing without an OTP provider. See [onboarding setup](backend/ONBOARDING.md) and [latest verification](backend/ONBOARDING-VERIFICATION.md).

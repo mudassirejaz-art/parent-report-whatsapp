@@ -22,6 +22,9 @@ import { HomeworkDiary } from "./diary";
 import { LeaveRequests } from "./leaves";
 const Tour = lazy(() => import("./tour").then((m) => ({ default: m.Tour })));
 const ConnectedWorkspace = lazy(() => import("./live"));
+const PasswordRecovery = lazy(() =>
+  import("./live/account").then((m) => ({ default: m.PasswordRecovery })),
+);
 const SchoolRegistration = lazy(() =>
   import("./live/school").then((m) => ({ default: m.SchoolRegistration })),
 );
@@ -105,6 +108,22 @@ function App() {
     <>
       <Scroll />
       <Routes>
+        <Route
+          path="/forgot-password"
+          element={
+            <Suspense fallback={<p role="status">Loading recovery...</p>}>
+              <PasswordRecovery />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <Suspense fallback={<p role="status">Loading recovery...</p>}>
+              <PasswordRecovery reset />
+            </Suspense>
+          }
+        />
         <Route
           path="/school/register"
           element={

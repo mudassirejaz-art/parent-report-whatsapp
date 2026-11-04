@@ -1,5 +1,7 @@
 # ParentReport frontend demo
 
+**Account security:** `/workspace/account` supports password change and owned-session revocation. `/forgot-password` provides explicitly local-only recovery when enabled. See backend/ACCOUNTS.md.
+
 **School setup:** `/school/register` creates a new school/admin account; connected admin School settings saves school identity, contact details, accent and a private database-backed logo. See backend/SCHOOLS.md. The original demo remains available.
 
 **Local guardian onboarding:** Connected class workspaces now include Parent links; student and parent use separate /enroll and /verify-guardian pages. See backend/ONBOARDING.md. The OTP step is explicitly simulated and disabled in production.

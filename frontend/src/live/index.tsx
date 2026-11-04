@@ -1,5 +1,12 @@
-import { useEffect, useState, type CSSProperties } from "react";
-import { Link, NavLink, Navigate, Route, Routes } from "react-router-dom";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  Link,
+  NavLink,
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import {
   BookOpen,
   LayoutGrid,
@@ -11,7 +18,8 @@ import {
   LogOut,
   Settings,
 } from "lucide-react";
-import { api, setCsrf, type Actor } from "./api";
+import { api, setCsrf, sessionSource, type Actor } from "./api";
+import { AccountSettings } from "./account";
 import { RemoteForm, ActionButton } from "./common";
 import { ClassesView, TeachersView, ClassView, ExamView } from "./classes";
 import {
@@ -29,30 +37,73 @@ export default function ConnectedWorkspace() {
   const [actor, setActor] = useState<Actor | null>(null),
     [loading, setLoading] = useState(true),
     [error, setError] = useState("");
+  const navigate = useNavigate();
+  const currentActor = useRef<Actor | null>(null);
+  const authRequest = useRef<AbortController | null>(null);
   useEffect(() => {
-    const controller = new AbortController();
-    api<Actor>("/auth/me", "GET", undefined, controller.signal)
-      .then((user) => {
-        setCsrf(user.csrf_token);
-        setActor(user);
-      })
-      .catch((e) => {
-        if (!controller.signal.aborted && e.status !== 401) setError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
-      });
+    let disposed = false;
+    const refresh = (clear = false) => {
+      authRequest.current?.abort();
+      const controller = new AbortController();
+      authRequest.current = controller;
+      if (clear) {
+        setActor(null);
+        setCsrf("");
+        setLoading(true);
+      }
+      api<Actor>("/auth/me", "GET", undefined, controller.signal)
+        .then((user) => {
+          if (disposed || controller.signal.aborted) return;
+          const previous = currentActor.current;
+          if (previous && previous.id !== user.id)
+            navigate("/workspace", { replace: true });
+          currentActor.current = user;
+          setCsrf(user.csrf_token);
+          setActor(user);
+          setError("");
+        })
+        .catch((e) => {
+          if (disposed || controller.signal.aborted) return;
+          setActor(null);
+          setCsrf("");
+          if (e.status !== 401) setError(e.message);
+        })
+        .finally(() => {
+          if (!disposed && !controller.signal.aborted) setLoading(false);
+        });
+    };
+    refresh();
     const expire = () => {
+      authRequest.current?.abort();
       setActor(null);
       setCsrf("");
+      setLoading(false);
       setError("Your session ended. Please sign in again.");
     };
-    window.addEventListener("pr-auth-expired", expire);
-    return () => {
-      controller.abort();
-      window.removeEventListener("pr-auth-expired", expire);
+    const focus = () => refresh();
+    const visible = () => {
+      if (document.visibilityState === "visible") refresh();
     };
-  }, []);
+    const channel =
+      typeof BroadcastChannel !== "undefined"
+        ? new BroadcastChannel("parentreport-session")
+        : null;
+    if (channel)
+      channel.onmessage = (e) => {
+        if (e.data?.source !== sessionSource) refresh(true);
+      };
+    window.addEventListener("pr-auth-expired", expire);
+    window.addEventListener("focus", focus);
+    document.addEventListener("visibilitychange", visible);
+    return () => {
+      disposed = true;
+      authRequest.current?.abort();
+      channel?.close();
+      window.removeEventListener("pr-auth-expired", expire);
+      window.removeEventListener("focus", focus);
+      document.removeEventListener("visibilitychange", visible);
+    };
+  }, [navigate]);
   if (loading)
     return (
       <div className="loading" role="status">
@@ -98,6 +149,9 @@ export default function ConnectedWorkspace() {
             ]}
             onSubmit={async (values) => {
               const user = await api<Actor>("/auth/login", "POST", values);
+              authRequest.current?.abort();
+              currentActor.current = user;
+              navigate("/workspace", { replace: true });
               setCsrf(user.csrf_token);
               setError("");
               setActor(user);
@@ -115,6 +169,9 @@ export default function ConnectedWorkspace() {
           <Link className="text-link" to="/">
             Explore the frontend demo →
           </Link>
+          <Link className="text-link" to="/forgot-password">
+            Forgot password?
+          </Link>
           <Link className="text-link" to="/school/register">
             New school? Create your workspace →
           </Link>
@@ -126,6 +183,8 @@ export default function ConnectedWorkspace() {
       key={actor.id}
       actor={actor}
       onLogout={() => {
+        authRequest.current?.abort();
+        currentActor.current = null;
         setActor(null);
         setCsrf("");
       }}
@@ -239,6 +298,9 @@ function WorkspaceShell({
           </div>
           <div className="live-buttons">
             <LanguageSwitcher />
+            <Link className="btn secondary" to="/workspace/account">
+              Account & security
+            </Link>
             <ActionButton
               secondary
               onAction={async () => {
@@ -252,6 +314,7 @@ function WorkspaceShell({
         </header>
         <main className="live-content">
           <Routes>
+            <Route path="account" element={<AccountSettings actor={actor} />} />
             <Route
               index
               element={

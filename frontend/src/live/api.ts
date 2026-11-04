@@ -111,6 +111,14 @@ export type Homework = {
   due_date: string;
 };
 let csrf = "";
+export const sessionSource = crypto.randomUUID();
+export function announceSessionChange() {
+  if (typeof BroadcastChannel !== "undefined") {
+    const channel = new BroadcastChannel("parentreport-session");
+    channel.postMessage({ source: sessionSource });
+    channel.close();
+  }
+}
 export const setCsrf = (value: string) => {
   csrf = value;
 };
@@ -128,6 +136,7 @@ export async function api<T>(
   body?: unknown,
   signal?: AbortSignal,
 ): Promise<T> {
+  const requestCsrf = csrf;
   let response: Response;
   try {
     response = await fetch("/api/v1" + path, {
@@ -157,7 +166,12 @@ export async function api<T>(
     detail: "The school service is unavailable. Please try again.",
   }));
   if (!response.ok) {
-    if (response.status === 401 && path !== "/auth/login" && csrf)
+    if (
+      response.status === 401 &&
+      path !== "/auth/login" &&
+      csrf &&
+      requestCsrf === csrf
+    )
       window.dispatchEvent(new Event("pr-auth-expired"));
     const detail =
       typeof result.detail === "string"
@@ -167,5 +181,15 @@ export async function api<T>(
           : "We could not complete this action.";
     throw new ApiError(detail, response.status);
   }
+  if (
+    [
+      "/auth/login",
+      "/auth/logout",
+      "/auth/change-password",
+      "/auth/local-recovery/complete",
+    ].includes(path) &&
+    method === "POST"
+  )
+    announceSessionChange();
   return result as T;
 }

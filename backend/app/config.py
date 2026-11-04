@@ -16,6 +16,7 @@ class Settings:
     local_onboarding: bool = False
     onboarding_key: str = ""
     registration_enabled: bool = False
+    local_recovery: bool = False
 
     @classmethod
     def load(cls):
@@ -35,6 +36,9 @@ class Settings:
         local_onboarding = value("APP_LOCAL_ONBOARDING", "false").lower() == "true"
         if production and local_onboarding:
             raise RuntimeError("Local verification is forbidden in production.")
+        local_recovery = value("APP_LOCAL_RECOVERY", "false").lower() == "true"
+        if production and local_recovery:
+            raise RuntimeError("Local password recovery is forbidden in production.")
         key = value("ONBOARDING_KEY")
         if local_onboarding and not key:
             from cryptography.fernet import Fernet
@@ -51,5 +55,5 @@ class Settings:
             from cryptography.fernet import Fernet
             Fernet(key.encode())  # Fail early on an invalid key, never silently replace it.
         registration = value("APP_SCHOOL_REGISTRATION", "false" if production else "true").lower() == "true"
-        return cls(url, origins, production, local_onboarding=local_onboarding, onboarding_key=key,registration_enabled=registration)
+        return cls(url, origins, production, local_onboarding=local_onboarding, onboarding_key=key,registration_enabled=registration,local_recovery=local_recovery)
 
