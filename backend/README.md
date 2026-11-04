@@ -1,8 +1,10 @@
-# ParentReport database
+# ParentReport backend
 
 Plain PostgreSQL 17+ foundation for the existing ParentReport frontend. No Supabase dependency.
 
-The current task starts backend development and supersedes the attached documents' earlier frontend-only boundary. The existing React demo stays unchanged and still uses its mock API. This folder currently provides a real PostgreSQL database, migrations, local lifecycle scripts and database integration tests. HTTP endpoints, production login, OTP verification, storage uploads and WhatsApp workers are not implemented yet.
+FastAPI now provides real password login, revocable database sessions and guarded admin/teacher/parent APIs. The connected frontend is available at `/workspace`; the original demo portals remain available separately. This work supersedes the attached documents' earlier frontend-only boundary. Real OTP, storage uploads and WhatsApp delivery are still separate integrations.
+
+**Start here:** [API setup, login accounts and supported workflows](API.md). The database setup and access contract are documented below.
 
 ## Local Windows setup
 
@@ -30,7 +32,7 @@ To use an existing PostgreSQL server instead, create a dedicated database and a 
 
 ## Data model
 
-25 domain tables, split into two schemas:
+25 domain tables plus 2 private authentication tables (`api_sessions`, `login_buckets`), split into two schemas. All 27 have RLS enabled.
 
 | Area | Tables |
 | --- | --- |
@@ -41,7 +43,7 @@ To use an existing PostgreSQL server instead, create a dedicated database and a 
 | School life | app.attendance, notices, notice_acknowledgements, homework, homework_completions, leave_requests |
 | Reporting operations | app_private.report_campaigns, app.report_deliveries, app_private.audit_events |
 
-Public-facing profiles and identity endpoints will be implemented in the API; private identity and guardian tables are not granted to the runtime role. Direct parent–teacher messaging is outside the current scope.
+Identity is returned only through authenticated session endpoints and the authorized school-admin teacher directory. Raw private identity and guardian tables are not granted to the runtime role. Direct parent–teacher messaging is outside the current scope.
 
 - Composite foreign keys reject references across schools and classes.
 - One current enrollment per student; historical enrollments retain previous class results.
@@ -62,7 +64,7 @@ Public-facing profiles and identity endpoints will be implemented in the API; pr
 
 `parentreport_api` inherits the non-owner `parentreport_runtime` role. Runtime has SELECT permissions only. Every domain table has RLS enabled; private tables have no runtime grants. Protected read helpers have an empty search path and execute only narrow identity-scoped lookups.
 
-A future trusted backend must authenticate a real session and set identity inside **each transaction**:
+The FastAPI backend authenticates a real database session and sets identity inside **each transaction**:
 
 ```sql
 begin;
@@ -75,13 +77,13 @@ Never take that UUID from an unverified request body/header, give parents a Post
 
 Admin reads stay within an active school; teachers require current, unsuspended assignments and active classes; parents can read only verified linked children and immutable published reports, plus the appropriate attendance/homework/notices. Parents cannot read draft marks. Class deactivation blocks teachers while linked parents retain historical reports.
 
-**Writes intentionally remain closed on the runtime connection.** The next API task must add narrowly scoped write functions/policies and transaction validation for class management, marks saving, report publication, onboarding, acknowledgements, homework completion and leave decisions. Do not grant blanket INSERT/UPDATE/DELETE or connect the frontend with owner credentials.
+**Direct table writes remain closed on the runtime connection.** Migration `004` grants execution of a fixed-operation private write function. It checks current identity and school/class/parent authority for each supported operation, locks class mutations, validates transactional marks and publishing, and handles parent acknowledgements/homework/leave decisions. The HTTP API exposes typed endpoints, not an arbitrary operation or SQL interface. Do not grant blanket INSERT/UPDATE/DELETE or connect the frontend with owner credentials.
 
-The schema stores encrypted phone fields, keyed HMAC lookup values and hashed invite/challenge tokens. Encryption keys, HMAC secrets, real password hashing, OTP generation/rate limits and session storage belong to the upcoming trusted backend. No real contacts or reusable OTPs are seeded.
+The schema reserves encrypted phone fields, keyed HMAC lookup values and hashed invite/challenge tokens for the upcoming real onboarding service. Password hashing and session storage are now implemented. Phone encryption/HMAC keys and OTP-provider integration remain future work. Only explicitly fictional local fixture contacts may be seeded.
 
 ## Migrations and verification
 
-`db/migrations/001_initial.sql` creates the domain model and scoped reads. `002_eligibility_audit.sql` adds send eligibility and automatic audit events.
+`db/migrations/001_initial.sql` creates the domain model and scoped reads. `002_eligibility_audit.sql` adds send eligibility and audits. `003_api_auth.sql` adds private session/login-counter tables and authentication helpers. `004_guarded_writes.sql` adds the authorized write operations.
 
 The runner applies pending SQL files in one transaction under an advisory lock, records SHA-256 checksums in `public.parentreport_migrations`, skips applied files and rejects edits to applied migrations. Add new numbered files for later changes; never edit already-deployed migrations. No reset/drop command is provided.
 
@@ -89,5 +91,5 @@ The runner applies pending SQL files in one transaction under an advisory lock, 
 
 Coverage includes tenant/class isolation, active assignment checks, suspended and revoked teachers, two children per guardian, parent report and notice isolation, unverified/revoked contacts, consent withdrawal, invalid marks/leave ranges, duplicate guardians/attendance, immutable report/audit rows and lack of runtime write/PII access.
 
-Next backend milestone: FastAPI authentication/session handling and guarded write endpoints, followed by replacing the frontend mock adapter incrementally.
+Remaining integrations: real guardian phone verification/OTP, parent recovery and password reset, school self-registration, logo storage, deployment and real WhatsApp workers/webhooks. No public endpoint can mark a real guardian verified. Local fixture links and consents are explicitly fictional. Additional guardians per child remain outside the current scope.
 

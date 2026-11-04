@@ -1,7 +1,7 @@
 import axios from "axios";
 import { seed } from "./mocks";
 import type { DB, Session, SchoolClass, Exam, Student } from "./types";
-export const apiClient = axios.create({ baseURL: "/api/v1", timeout: 10000 }); // Future backend adapter; never called by the demo.
+export const apiClient = axios.create({ baseURL: "/api/v1", timeout: 10000 }); // Legacy demo adapter. The connected workspace uses live/api.ts.
 export const className = (c: SchoolClass) => `Class ${c.grade}-${c.section}`;
 export function canClass(db: DB, session: Session | null, id: string) {
   const c = db.classes.find((c) => c.id === id && c.schoolId === db.school.id);

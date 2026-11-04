@@ -1,0 +1,28 @@
+{
+  "passed": 21,
+  "checks": [
+    "Real login opens persisted school classes",
+    "Admin creates, activates and assigns a database class",
+    "Assigned teacher adds a student to PostgreSQL",
+    "Direct unassigned class URL is denied",
+    "Teacher saves marks and publishes immutable reports",
+    "Teacher attendance is saved",
+    "Teacher publishes a private student notice",
+    "Parent sees only linked children",
+    "Saved attendance reaches the linked parent",
+    "Published marks reach the private parent report",
+    "Changing report ID cannot reveal another child",
+    "Parent notice acknowledgement is persisted",
+    "Private student notice is hidden from another parent",
+    "Parent can mark their child's homework checked",
+    "Parent leave request persists",
+    "Teacher leave decision reaches parent",
+    "Parent responsive layout at 390",
+    "Parent responsive layout at 768",
+    "Parent responsive layout at 1440",
+    "Class deactivation revokes an existing teacher session",
+    "Sign out revokes the real session"
+  ],
+  "errors": [],
+  "fictionalData": true
+}

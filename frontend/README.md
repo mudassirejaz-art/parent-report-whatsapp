@@ -1,5 +1,7 @@
 # ParentReport frontend demo
 
+**Connected backend:** `/workspace` now uses real FastAPI password sessions and PostgreSQL APIs for class/teacher access, students, exams, marks, published reports, attendance, notices, homework and leave requests. See `backend/API.md` for setup and generated local login accounts. The original demo routes below remain available with mock data. Real guardian OTP and WhatsApp delivery remain future integrations.
+
 **Current scope:** direct parent–teacher messaging has been removed. There are no inbox/contact buttons, messaging routes or unread-conversation actions. Parent mobile navigation now offers Home, Attendance, Homework diary and Notices. School/class notices, private student notes, leave requests and WhatsApp report simulation remain. Previous conversation data in existing demo storage is not exposed or destructively purged. The earlier messaging descriptions below describe the historical prototype and are not available features. `scripts/browser-no-messaging.mjs` verifies the removal; the school-life suite now excludes chat workflows.
 
 A **new standalone demo** built in an empty repository after reading both ParentReport v2 requirement documents. No existing frontend source was present to preserve.

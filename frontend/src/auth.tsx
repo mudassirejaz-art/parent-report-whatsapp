@@ -76,6 +76,9 @@ export function Auth() {
       </div>
       <div className="auth-content">
         <BadgeDemo />
+        <Link className="text-link" to="/workspace">
+          Sign in to your connected school workspace →
+        </Link>
         <h1>
           {login
             ? parent

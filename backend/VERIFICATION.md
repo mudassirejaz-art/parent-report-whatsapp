@@ -1,4 +1,6 @@
-# Database verification — 4 November 2026
+# Database verification — 4 November 2026 (initial milestone)
+
+**Current milestone results:** [API-VERIFICATION.md](API-VERIFICATION.md) includes the FastAPI, browser and updated database checks. This file retains the original database milestone evidence.
 
 Environment: real PostgreSQL 17.11, Windows x86-64, local loopback port 55432.
 

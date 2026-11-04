@@ -21,13 +21,13 @@ Vite prints the local preview URL. Build with `npm run build`, run unit tests wi
 
 The demo includes school-admin, class-teacher and separate parent portals; class permissions; guardian verification and consent simulation; exams and marks; private reports; attendance; school/class notices and private student notes; homework; leave requests; branding; English/Roman Urdu interface; and a 20-second Remotion product tour. Direct parent–teacher chat has been removed.
 
-Frontend records remain fictional and browser-local. Authentication, OTP and WhatsApp delivery in the UI are simulations. The database foundation is implemented separately; HTTP endpoints and frontend integration are the next backend milestone.
+The connected `/workspace` now uses real FastAPI password sessions and PostgreSQL APIs. The original demo routes remain browser-local mock experiences. Local seed records are fictional; guardian phone verification and WhatsApp delivery are not real integrations yet.
 
 See [frontend instructions](frontend/README.md) and [frontend verification results](frontend/verification/RESULTS.md) for role accounts, routes, run commands and limitations.
 
 ## PostgreSQL database
 
-The backend uses plain PostgreSQL 17+, with 25 domain tables, tenant/class/parent read policies, guardian verification and consent records, immutable report versions, audit events, attendance, notices, homework and leave requests. Direct parent–teacher chat remains outside scope. Runtime writes stay closed until guarded API endpoints are implemented.
+The backend uses plain PostgreSQL 17+, with 25 domain tables plus private session/login-counter tables. FastAPI exposes typed admin/teacher/parent routes, scoped reads and guarded transactional writes. Direct parent–teacher chat remains removed. Runtime has no blanket table write grants.
 
 On Windows, from this repository root:
 
@@ -38,4 +38,19 @@ powershell -NoProfile -ExecutionPolicy Bypass -File backend/scripts/Invoke-Datab
 powershell -NoProfile -ExecutionPolicy Bypass -File backend/scripts/Invoke-Database.ps1 test
 ```
 
-Local database: `parentreport` at `127.0.0.1:55432`. Credentials are generated locally and ignored by Git. See [backend setup and access contract](backend/README.md) and [database verification](backend/VERIFICATION.md): 50 PostgreSQL assertions passed. The database itself is local; source publication does not deploy a hosted service.
+Local database: `parentreport` at `127.0.0.1:55432`. Database credentials and fictional account passwords are generated locally and ignored by Git. The database/API are local; source publication does not deploy a hosted service.
+
+## Run the connected backend
+
+From the repository root, after PostgreSQL is started and migrations applied:
+
+```powershell
+python -m venv backend/.venv
+backend/.venv/Scripts/python.exe -m pip install -r backend/requirements.txt
+backend/.venv/Scripts/python.exe backend/scripts/seed_local.py
+powershell -NoProfile -ExecutionPolicy Bypass -File backend/scripts/Start-Backend.ps1
+```
+
+Start the frontend in another terminal and open **http://127.0.0.1:5173/workspace**. Generated local login accounts are in `backend/.local/accounts.json`. API docs: **http://127.0.0.1:8000/docs**.
+
+See [API setup and endpoint map](backend/API.md), [database access contract](backend/README.md), and [actual verification](backend/API-VERIFICATION.md): **25 API tests, 50 database assertions, 49 frontend unit tests and 21 connected browser checks passed**; production frontend build passed.

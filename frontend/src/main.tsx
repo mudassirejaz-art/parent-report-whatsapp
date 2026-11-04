@@ -21,6 +21,7 @@ import { Noticeboard } from "./notices";
 import { HomeworkDiary } from "./diary";
 import { LeaveRequests } from "./leaves";
 const Tour = lazy(() => import("./tour").then((m) => ({ default: m.Tour })));
+const ConnectedWorkspace = lazy(() => import("./live"));
 import { Denied } from "./components";
 import type { Role } from "./types";
 import "./styles.css";
@@ -98,6 +99,20 @@ function App() {
     <>
       <Scroll />
       <Routes>
+        <Route
+          path="/workspace/*"
+          element={
+            <Suspense
+              fallback={
+                <div className="loading" role="status">
+                  Opening school workspace…
+                </div>
+              }
+            >
+              <ConnectedWorkspace />
+            </Suspense>
+          }
+        />
         <Route path="/" element={<Auth />} />
         {["/login", "/admin/login", "/teacher/login", "/parent/login"].map(
           (p) => (

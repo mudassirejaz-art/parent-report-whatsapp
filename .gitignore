@@ -17,3 +17,7 @@ formatter-tool.tgz
 .publish/
 .postgres-local/
 backend/.local/
+backend/.venv/
+__pycache__/
+.pytest_cache/
+*.pyc

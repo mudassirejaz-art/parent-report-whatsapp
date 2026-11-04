@@ -1,0 +1,439 @@
+.live-app {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  min-height: 100vh;
+}
+.live-sidebar {
+  background: #fff;
+  border-right: 1px solid #e3e9e5;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.live-sidebar .brand {
+  font-size: 21px;
+  gap: 8px;
+}
+.live-connected {
+  font-size: 11px;
+  color: #52716b;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.live-connected i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #168a73;
+}
+.live-sidebar nav {
+  display: grid;
+  gap: 6px;
+}
+.live-sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 14px;
+  color: #60716f;
+  border-radius: 9px;
+  font-weight: 550;
+}
+.live-sidebar nav a.active {
+  background: #e5f5ef;
+  color: #087f75;
+}
+.live-sidebar nav a:hover {
+  background: #f3f7f4;
+}
+.live-sidebar-foot {
+  margin-top: auto;
+  font-size: 12px;
+}
+.live-main {
+  min-width: 0;
+}
+.live-header {
+  background: #fff;
+  border-bottom: 1px solid #e3e9e5;
+  padding: 17px 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.live-header > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+.live-content {
+  max-width: 1220px;
+  margin: auto;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+.live-content .page-heading {
+  margin-bottom: 0;
+}
+.live-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 18px;
+}
+.live-grid .card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.live-grid .card .btn {
+  margin-top: 8px;
+}
+.live-stack {
+  display: grid;
+  gap: 16px;
+}
+.live-card-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.live-class-icon {
+  display: grid;
+  place-items: center;
+  background: #e5f5ef;
+  color: #087f75;
+  width: 48px;
+  height: 48px;
+  font-size: 24px;
+  font-weight: 650;
+  border-radius: 13px;
+}
+.live-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 16px 0 0;
+  min-width: 0;
+}
+.live-fieldset .form {
+  max-width: 620px;
+}
+.live-fieldset:disabled {
+  opacity: 0.65;
+}
+.live-success {
+  color: #087f75;
+  font-size: 13px;
+}
+.live-action {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 10px;
+  max-width: 100%;
+}
+.live-action small {
+  max-width: 440px;
+}
+.live-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.live-buttons .live-action {
+  margin-top: 0;
+}
+.live-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.live-tabs button {
+  padding: 9px 17px;
+  border: 1px solid #dce5df;
+  border-radius: 8px;
+  background: #fff;
+  white-space: nowrap;
+  color: #556967;
+}
+.live-tabs button.active {
+  background: #182d38;
+  color: #fff;
+  border-color: #182d38;
+}
+.live-content summary {
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px;
+}
+.live-content .table-wrap {
+  overflow: auto;
+  max-width: 100%;
+}
+.live-content table {
+  width: 100%;
+  min-width: 430px;
+  border-collapse: collapse;
+}
+.live-content th,
+.live-content td {
+  text-align: left;
+  padding: 13px 16px;
+  border-bottom: 1px solid #e4ebe6;
+}
+.live-content th {
+  color: #5c706b;
+  font-size: 12px;
+  background: #f6f9f7;
+}
+.live-mark {
+  width: 92px;
+  padding: 8px;
+  border: 1px solid #d8e2dc;
+  border-radius: 6px;
+}
+.live-content select,
+.live-content input[type="date"] {
+  padding: 9px 11px;
+  border: 1px solid #d8e2dc;
+  border-radius: 7px;
+  background: #fff;
+  max-width: 100%;
+}
+.live-date {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin: 20px 0;
+}
+.live-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid #e5ebe7;
+}
+.live-two {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+.live-two label {
+  display: grid;
+  gap: 6px;
+  min-width: 200px;
+}
+.live-status {
+  padding: 20px;
+}
+.live-score {
+  font-size: 40px;
+  font-weight: 650;
+  letter-spacing: -1px;
+  color: #087f75;
+}
+.live-report {
+  max-width: 850px;
+  margin: 10px auto;
+  width: 100%;
+  padding: 38px;
+}
+.live-report table {
+  min-width: 0;
+}
+.live-preserve {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.live-child-picker {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.live-child-picker button {
+  display: grid;
+  gap: 3px;
+  background: #fff;
+  border: 1px solid #dce5df;
+  border-radius: 10px;
+  padding: 15px 22px;
+  text-align: left;
+  color: #45645c;
+}
+.live-child-picker button.active {
+  border: 2px solid #087f75;
+  background: #eaf7f1;
+}
+.live-child-picker span {
+  font-size: 12px;
+}
+.live-login {
+  max-width: 1140px;
+  min-height: 100vh;
+  margin: auto;
+  padding: 64px 32px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 85px;
+}
+.live-login-intro > .brand {
+  margin-bottom: 65px;
+}
+.live-login-intro h1 {
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.15;
+  margin: 17px 0;
+}
+.live-login-intro > p:not(.eyebrow) {
+  font-size: 17px;
+  color: #63766e;
+  max-width: 430px;
+}
+.live-login-points {
+  display: grid;
+  gap: 13px;
+  color: #087f75;
+  margin-top: 32px;
+}
+.live-login-card {
+  padding: 34px;
+}
+.live-login-card h2 {
+  font-size: 26px;
+  margin: 19px 0 8px;
+}
+.live-login-card .text-link {
+  display: block;
+  margin-top: 18px;
+}
+.live-login .form input {
+  width: 100%;
+}
+@media (max-width: 800px) {
+  .live-app {
+    display: block;
+  }
+  .live-sidebar {
+    position: relative;
+    height: auto;
+    padding: 16px;
+    border-right: 0;
+    border-bottom: 1px solid #e3e9e5;
+    gap: 14px;
+  }
+  .live-sidebar > .brand {
+    font-size: 20px;
+  }
+  .live-connected {
+    position: absolute;
+    right: 16px;
+    top: 24px;
+  }
+  .live-sidebar nav {
+    display: flex;
+    overflow: auto;
+    gap: 5px;
+  }
+  .live-sidebar nav a {
+    white-space: nowrap;
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+  .live-sidebar-foot {
+    display: none;
+  }
+  .live-header {
+    padding: 14px 18px;
+    align-items: flex-start;
+  }
+  .live-header .live-buttons {
+    gap: 6px;
+    justify-content: flex-end;
+  }
+  .live-header .btn {
+    padding: 8px 11px;
+    font-size: 12px;
+  }
+  .live-header .eyebrow {
+    font-size: 9px;
+  }
+  .live-content {
+    padding: 20px 15px;
+    gap: 17px;
+  }
+  .live-content .card {
+    padding: 20px;
+  }
+  .live-login {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 30px 20px;
+    align-items: stretch;
+  }
+  .live-login-intro > .brand {
+    margin-bottom: 32px;
+  }
+  .live-login-intro h1 {
+    font-size: 32px;
+  }
+  .live-login-points {
+    display: none;
+  }
+  .live-login-card {
+    padding: 25px;
+  }
+  .live-two label {
+    min-width: 0;
+    width: 100%;
+  }
+  .live-content th,
+  .live-content td {
+    padding: 12px 10px;
+  }
+  .live-tabs {
+    max-width: calc(100vw - 30px);
+  }
+  .live-content .live-report {
+    padding: 22px;
+  }
+  .live-connected {
+    font-size: 10px;
+  }
+}
+@media print {
+  .live-no-print {
+    display: none !important;
+  }
+  .live-app {
+    display: block;
+  }
+  .live-content {
+    padding: 0;
+  }
+  .live-report {
+    border: 0;
+    box-shadow: none !important;
+  }
+  .live-main {
+    width: 100%;
+  }
+}
