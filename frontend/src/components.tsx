@@ -176,6 +176,8 @@ export type Field = {
   options?: { value: string; label: string }[];
   min?: number;
   max?: number;
+  required?: boolean;
+  maxLength?: number;
 };
 export function Form({
   fields,
@@ -219,7 +221,7 @@ export function Form({
               aria-label={f.label}
               name={f.name}
               defaultValue={f.value}
-              required
+              required={f.required !== false}
             >
               {f.options.map((o) => (
                 <option key={o.value} value={o.value}>
@@ -232,8 +234,8 @@ export function Form({
               aria-label={f.label}
               name={f.name}
               defaultValue={f.value}
-              required
-              maxLength={2000}
+              required={f.required !== false}
+              maxLength={f.maxLength ?? 2000}
               rows={4}
             />
           ) : (
@@ -244,8 +246,8 @@ export function Form({
               defaultValue={f.value}
               min={f.min}
               max={f.max}
-              required
-              maxLength={120}
+              required={f.required !== false}
+              maxLength={f.maxLength ?? 120}
             />
           )}
         </label>

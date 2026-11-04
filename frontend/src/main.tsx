@@ -22,6 +22,9 @@ import { HomeworkDiary } from "./diary";
 import { LeaveRequests } from "./leaves";
 const Tour = lazy(() => import("./tour").then((m) => ({ default: m.Tour })));
 const ConnectedWorkspace = lazy(() => import("./live"));
+const SchoolRegistration = lazy(() =>
+  import("./live/school").then((m) => ({ default: m.SchoolRegistration })),
+);
 const ConnectedOnboarding = lazy(() =>
   import("./live/onboarding").then((m) => ({ default: m.PublicOnboarding })),
 );
@@ -102,6 +105,16 @@ function App() {
     <>
       <Scroll />
       <Routes>
+        <Route
+          path="/school/register"
+          element={
+            <Suspense
+              fallback={<p role="status">Opening school registration…</p>}
+            >
+              <SchoolRegistration />
+            </Suspense>
+          }
+        />
         <Route
           path="/enroll"
           element={

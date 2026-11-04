@@ -324,6 +324,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     from .onboarding import register_onboarding
     register_onboarding(app, settings, pool, database, passwords)
+    from .schools import register_schools
+    register_schools(app,settings,pool,database,passwords)
     return app
 
 app = create_app()

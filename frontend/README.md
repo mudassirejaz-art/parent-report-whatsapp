@@ -1,5 +1,7 @@
 # ParentReport frontend demo
 
+**School setup:** `/school/register` creates a new school/admin account; connected admin School settings saves school identity, contact details, accent and a private database-backed logo. See backend/SCHOOLS.md. The original demo remains available.
+
 **Local guardian onboarding:** Connected class workspaces now include Parent links; student and parent use separate /enroll and /verify-guardian pages. See backend/ONBOARDING.md. The OTP step is explicitly simulated and disabled in production.
 
 **Connected backend:** `/workspace` now uses real FastAPI password sessions and PostgreSQL APIs for class/teacher access, students, exams, marks, published reports, attendance, notices, homework and leave requests. See `backend/API.md` for setup and generated local login accounts. The original demo routes below remain available with mock data. Real guardian OTP and WhatsApp delivery remain future integrations.

@@ -1,0 +1,26 @@
+{
+  "passed": 19,
+  "checks": [
+    "School signup validates password confirmation",
+    "New school and first administrator are created",
+    "Fresh school starts empty with a clear first-class action",
+    "School name and optional contact fields save without losing feedback",
+    "Saved accent colour themes readable primary controls",
+    "Logo upload rejects an unsupported file type",
+    "Logo uploads to PostgreSQL and appears in the school header",
+    "School identity and logo survive a browser reload",
+    "A newly registered school can create and assign its first class",
+    "Assigned teacher sees this school's branding and class only",
+    "Verified local parent sees their school's logo and their child",
+    "Branding updates reach teachers and parents on navigation",
+    "Published reports keep their original recorded school name",
+    "Logo removal updates all authorized roles",
+    "An unrelated school's parent cannot read the private logo",
+    "Teacher cannot open school administration settings",
+    "Branded parent layout fits 390",
+    "Branded parent layout fits 768",
+    "Branded parent layout fits 1440"
+  ],
+  "pageErrors": [],
+  "fictionalSchool": true
+}

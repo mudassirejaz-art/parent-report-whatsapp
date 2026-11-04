@@ -15,6 +15,7 @@ class Settings:
     pool_size: int = 8
     local_onboarding: bool = False
     onboarding_key: str = ""
+    registration_enabled: bool = False
 
     @classmethod
     def load(cls):
@@ -24,7 +25,10 @@ class Settings:
         url = value("DATABASE_URL")
         if not url:
             raise RuntimeError("DATABASE_URL is required. See backend/README.md.")
-        production = value("APP_ENV", "development") == "production"
+        environment = value("APP_ENV", "development").lower()
+        if environment not in {"development", "test", "production"}:
+            raise RuntimeError("APP_ENV must be development, test or production.")
+        production = environment == "production"
         origins = [x.strip() for x in value("APP_ORIGINS", "http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:8000").split(",") if x.strip()]
         if not origins or "*" in origins or (production and any(urlparse(x).scheme != "https" for x in origins)):
             raise RuntimeError("Configure explicit APP_ORIGINS (HTTPS in production).")
@@ -46,5 +50,6 @@ class Settings:
         if local_onboarding:
             from cryptography.fernet import Fernet
             Fernet(key.encode())  # Fail early on an invalid key, never silently replace it.
-        return cls(url, origins, production, local_onboarding=local_onboarding, onboarding_key=key)
+        registration = value("APP_SCHOOL_REGISTRATION", "false" if production else "true").lower() == "true"
+        return cls(url, origins, production, local_onboarding=local_onboarding, onboarding_key=key,registration_enabled=registration)
 

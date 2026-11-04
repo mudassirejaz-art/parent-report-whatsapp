@@ -2,9 +2,11 @@
 
 Plain PostgreSQL 17+ foundation for the existing ParentReport frontend. No Supabase dependency.
 
-FastAPI now provides real password login, revocable database sessions and guarded admin/teacher/parent APIs. The connected frontend is available at `/workspace`; the original demo portals remain available separately. This work supersedes the attached documents' earlier frontend-only boundary. Real OTP, storage uploads and WhatsApp delivery are still separate integrations.
+FastAPI provides real password login, revocable sessions, school self-registration and guarded admin/teacher/parent APIs. School profile/logo uploads persist in PostgreSQL. The connected frontend is at `/workspace`; original demo portals remain separately available. This work supersedes the attached documents' earlier frontend-only boundary. Real OTP and WhatsApp delivery are still separate integrations.
 
 **Start here:** [API setup, login accounts and supported workflows](API.md). The database setup and access contract are documented below.
+
+**Latest milestone:** [School registration and branding](SCHOOLS.md), with [actual verification](SCHOOLS-VERIFICATION.md): 60 API tests, 50 database assertions, 49 frontend tests and 19 school browser checks passed.
 
 **Guardian onboarding milestone:** Student-bound invitations, separate parent registration/sibling linking and consent withdrawal are now implemented for explicitly enabled local testing. See [ONBOARDING.md](ONBOARDING.md). No real phone verification or messaging provider is configured.
 
@@ -34,7 +36,7 @@ To use an existing PostgreSQL server instead, create a dedicated database and a 
 
 ## Data model
 
-25 domain tables plus 2 private authentication tables (`api_sessions`, `login_buckets`), split into two schemas. All 27 have RLS enabled.
+25 domain tables plus 2 private authentication tables and private `school_logos` storage, split into two schemas. All 28 have RLS enabled.
 
 | Area | Tables |
 | --- | --- |
@@ -81,7 +83,7 @@ Admin reads stay within an active school; teachers require current, unsuspended 
 
 **Direct table writes remain closed on the runtime connection.** Migration `004` grants execution of a fixed-operation private write function. It checks current identity and school/class/parent authority for each supported operation, locks class mutations, validates transactional marks and publishing, and handles parent acknowledgements/homework/leave decisions. The HTTP API exposes typed endpoints, not an arbitrary operation or SQL interface. Do not grant blanket INSERT/UPDATE/DELETE or connect the frontend with owner credentials.
 
-The schema reserves encrypted phone fields, keyed HMAC lookup values and hashed invite/challenge tokens for the upcoming real onboarding service. Password hashing and session storage are now implemented. Phone encryption/HMAC keys and OTP-provider integration remain future work. Only explicitly fictional local fixture contacts may be seeded.
+Encrypted phone fields, keyed HMAC lookups and hashed invite/challenge tokens are implemented for explicitly local guardian onboarding. Password hashing and session storage are implemented. A real OTP-provider integration remains future work; simulations cannot establish production guardian ownership.
 
 ## Migrations and verification
 
@@ -93,5 +95,5 @@ The runner applies pending SQL files in one transaction under an advisory lock, 
 
 Coverage includes tenant/class isolation, active assignment checks, suspended and revoked teachers, two children per guardian, parent report and notice isolation, unverified/revoked contacts, consent withdrawal, invalid marks/leave ranges, duplicate guardians/attendance, immutable report/audit rows and lack of runtime write/PII access.
 
-Remaining integrations: real guardian phone verification/OTP, parent recovery and password reset, school self-registration, logo storage, deployment and real WhatsApp workers/webhooks. No public endpoint can mark a real guardian verified. Local fixture links and consents are explicitly fictional. Additional guardians per child remain outside the current scope.
+Remaining integrations: real guardian phone verification/OTP, parent recovery/password reset, deployment and real WhatsApp workers/webhooks. School registration and private logo storage are now implemented. No public endpoint can mark a real guardian verified. Local fixture links and consents are explicitly fictional. Additional guardians per child remain outside the current scope.
 

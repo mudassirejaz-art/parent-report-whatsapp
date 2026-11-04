@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Link, NavLink, Navigate, Route, Routes } from "react-router-dom";
 import {
   BookOpen,
@@ -9,6 +9,7 @@ import {
   HeartHandshake,
   CalendarDays,
   LogOut,
+  Settings,
 } from "lucide-react";
 import { api, setCsrf, type Actor } from "./api";
 import { RemoteForm, ActionButton } from "./common";
@@ -22,6 +23,7 @@ import {
 } from "./family";
 import { LanguageSwitcher } from "../i18n/LanguageSwitcher";
 import "./live.css";
+import { SchoolProvider, SchoolSettings, useSchools, logoUrl } from "./school";
 
 export default function ConnectedWorkspace() {
   const [actor, setActor] = useState<Actor | null>(null),
@@ -113,6 +115,9 @@ export default function ConnectedWorkspace() {
           <Link className="text-link" to="/">
             Explore the frontend demo →
           </Link>
+          <Link className="text-link" to="/school/register">
+            New school? Create your workspace →
+          </Link>
         </section>
       </main>
     );
@@ -134,6 +139,21 @@ function Workspace({
   actor: Actor;
   onLogout: () => void;
 }) {
+  return (
+    <SchoolProvider>
+      <WorkspaceShell actor={actor} onLogout={onLogout} />
+    </SchoolProvider>
+  );
+}
+function WorkspaceShell({
+  actor,
+  onLogout,
+}: {
+  actor: Actor;
+  onLogout: () => void;
+}) {
+  const branding = useSchools();
+  const school = branding.schools.length === 1 ? branding.schools[0] : null;
   const admin = actor.memberships.some((m) => m.role === "school_admin");
   const parent = actor.memberships.length === 0;
   const nav = [
@@ -153,15 +173,38 @@ function Workspace({
       label: parent ? "Homework & leave" : "Leave requests",
       Icon: CalendarDays,
     },
+    ...(admin
+      ? [
+          {
+            to: "/workspace/settings",
+            label: "School settings",
+            Icon: Settings,
+          },
+        ]
+      : []),
   ];
   return (
-    <div className="live-app">
+    <div
+      className="live-app"
+      style={
+        { "--school-accent": school?.accent ?? "#087f75" } as CSSProperties
+      }
+    >
       <aside className="live-sidebar live-no-print">
         <Link className="brand" to="/workspace">
           <span className="brand-icon">
-            <BookOpen size={23} />
+            {school?.logo_object_key ? (
+              <img src={logoUrl(school)} alt={school.name + " logo"} />
+            ) : (
+              <BookOpen size={23} />
+            )}
           </span>
-          ParentReport
+          <span className="live-school-title">
+            <strong>{school?.name ?? "ParentReport"}</strong>
+            {school && (
+              <small>{school.tagline || "Powered by ParentReport"}</small>
+            )}
+          </span>
         </Link>
         <span className="live-connected">
           <i />
@@ -216,6 +259,7 @@ function Workspace({
               }
             />
             <Route path="teachers" element={<TeachersView actor={actor} />} />
+            <Route path="settings" element={<SchoolSettings actor={actor} />} />
             <Route
               path="classes/:classId"
               element={<ClassView actor={actor} />}

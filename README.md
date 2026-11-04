@@ -1,5 +1,7 @@
 # ParentReport
 
+**New school setup:** `/school/register` creates a separate school and first admin account. Admin School settings now persists school name/contact details, a readable accent colour and a private PostgreSQL-backed logo. See [setup](backend/SCHOOLS.md) and [verified results](backend/SCHOOLS-VERIFICATION.md): 60 API tests, 50 database checks, 49 frontend tests and 19 school browser checks passed.
+
 **New: local guardian onboarding.** Teacher-generated student invitations, separate parent registration or sibling linking, masked encrypted contacts and consent withdrawal are now available. This is explicitly local testing without an OTP provider. See [onboarding setup](backend/ONBOARDING.md) and [latest verification](backend/ONBOARDING-VERIFICATION.md).
 
 School-to-parent progress reporting for Pakistani schools and academies. Frontend and backend share this repository while remaining separate applications.

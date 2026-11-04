@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Form, type Field } from "../components";
 import { api } from "./api";
 
@@ -29,7 +29,8 @@ export function useRemote<T>(path: string | null) {
       });
     return () => controller.abort();
   }, [path, version]);
-  return { data, error, loading, refresh: () => setVersion((n) => n + 1) };
+  const refresh = useCallback(() => setVersion((n) => n + 1), []);
+  return { data, error, loading, refresh };
 }
 export function RemoteForm({
   fields,

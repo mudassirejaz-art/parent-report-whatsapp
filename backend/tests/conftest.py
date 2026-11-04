@@ -37,7 +37,7 @@ def env():
             for file in sorted((ROOT/"db"/"migrations").glob("*.sql")):
                 conn.execute(file.read_text(encoding="utf-8"))
             manifest=seed(conn)
-        app=create_app(Settings(runtime_url,pool_size=3,local_onboarding=True,onboarding_key=Fernet.generate_key().decode()))
+        app=create_app(Settings(runtime_url,pool_size=3,local_onboarding=True,onboarding_key=Fernet.generate_key().decode(),registration_enabled=True))
         clients=[]
         with TestClient(app) as root:
             def login(role):

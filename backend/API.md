@@ -1,5 +1,7 @@
 # Connected API workspace
 
+**School setup:** Self-registration, admin school profiles and private PostgreSQL logo uploads are now implemented. See [SCHOOLS.md](SCHOOLS.md) and [latest verification](SCHOOLS-VERIFICATION.md).
+
 **Local guardian onboarding is now available:** See [ONBOARDING.md](ONBOARDING.md) for the teacher → student → separate parent simulation, secure contact storage and consent controls. APP_LOCAL_ONBOARDING must be explicitly enabled for fictional parent fixtures and simulated links.
 
 The app now has a real FastAPI/PostgreSQL workspace at **/workspace**. Existing demo routes remain browser-local and use the demo role switcher. The connected workspace requires a real local password session; changing demo state cannot grant access.
@@ -95,5 +97,5 @@ See [VERIFICATION.md](VERIFICATION.md) for actual results.
 
 ## Remaining integrations
 
-Real guardian onboarding/OTP, parent recovery/password reset, school self-registration, logo file storage and real WhatsApp workers/webhooks remain future integrations. The live UI does not expose a way to mark real guardians verified. The original branding/tour and remaining demo screens continue to work in demo mode. No messaging inbox was added.
+Real guardian OTP, parent recovery/password reset and real WhatsApp workers/webhooks remain future integrations. Local guardian onboarding, school registration and private logo storage are implemented. The live UI cannot mark a real guardian verified. The original tour and remaining demo screens still work in demo mode. No messaging inbox was added.
 

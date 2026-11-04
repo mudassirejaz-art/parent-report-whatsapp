@@ -135,10 +135,15 @@ export async function api<T>(
       credentials: "same-origin",
       signal,
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type":
+          body instanceof Blob
+            ? body.type || "application/octet-stream"
+            : "application/json",
         ...(method !== "GET" && csrf ? { "X-CSRF-Token": csrf } : {}),
       },
-      ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+      ...(body !== undefined
+        ? { body: body instanceof Blob ? body : JSON.stringify(body) }
+        : {}),
     });
   } catch (error) {
     if (error instanceof DOMException && error.name === "AbortError")

@@ -48,7 +48,11 @@ export function ClassesView({ actor }: { actor: Actor }) {
       </div>
       {!remote.loading && !remote.data?.length && !remote.error && (
         <Empty title="No classes available">
-          <p>Your school admin can create and assign your class portal.</p>
+          <p>
+            {admin
+              ? "Create your first class portal below, then activate it and assign a teacher."
+              : "Your school admin can create and assign your class portal."}
+          </p>
         </Empty>
       )}
       {admin && (
