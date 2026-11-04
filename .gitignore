@@ -15,3 +15,5 @@ formatter-tool.tgz
 *.pem
 *.key
 .publish/
+.postgres-local/
+backend/.local/
