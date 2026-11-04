@@ -262,6 +262,88 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+.live-onboarding {
+  width: min(740px, 100%);
+  margin: 0 auto;
+  padding: 30px 20px 60px;
+  display: grid;
+  gap: 22px;
+  min-height: 100vh;
+  align-content: start;
+}
+.live-onboarding .brand {
+  margin: 8px 0 16px;
+}
+.live-simulation {
+  background: #fff5df;
+  border: 1px solid #ecd49a;
+  border-radius: 10px;
+  padding: 15px 18px;
+  color: #72521e;
+  font-size: 13px;
+}
+.live-simulation p {
+  margin: 5px 0 0;
+}
+.live-guardian-row {
+  padding: 22px 0;
+  border-bottom: 1px solid #e2e9e3;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.live-guardian-row h3 {
+  margin-bottom: 10px;
+}
+.live-invite-result {
+  flex-basis: 100%;
+  padding: 16px;
+  background: #f3f8f5;
+  border-radius: 9px;
+}
+.live-invite-result input,
+.live-share-label input {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #d8e2dc;
+  border-radius: 7px;
+  margin-top: 7px;
+  background: white;
+}
+.live-share-label {
+  display: block;
+  margin: 20px 0;
+}
+.live-consent {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 14px;
+  margin: 22px 0;
+}
+.live-consent input {
+  margin-top: 4px;
+  min-width: 18px;
+  min-height: 18px;
+  accent-color: #087f75;
+}
+.live-test-code {
+  background: #e5f5ef;
+  border: 1px solid #b6dccc;
+  padding: 17px;
+  border-radius: 9px;
+  margin-top: 20px;
+}
+.live-test-code code {
+  font-size: 24px;
+  letter-spacing: 3px;
+  color: #087f75;
+}
+.live-test-code p {
+  font-size: 12px;
+  margin-bottom: 0;
+}
 .live-child-picker {
   display: flex;
   gap: 12px;

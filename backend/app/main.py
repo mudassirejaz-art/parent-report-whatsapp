@@ -28,6 +28,8 @@ def digest(value: str) -> str:
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or Settings.load()
+    if settings.secure_cookies and settings.local_onboarding:
+        raise RuntimeError("Local verification is forbidden in production.")
     pool = ConnectionPool(settings.database_url, min_size=1, max_size=settings.pool_size, open=False,
                           timeout=5, kwargs={"row_factory": dict_row, "connect_timeout": 5})
 
@@ -46,6 +48,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app = FastAPI(title="ParentReport API", version="0.2.0", lifespan=lifespan)
     app.state.pool = pool
+    app.state.settings = settings
     hosts = sorted({urlparse(x).hostname for x in settings.origins} | {"127.0.0.1", "localhost", "testserver"})
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=hosts)
 
@@ -89,6 +92,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 if not hmac.compare_digest(request.headers.get("x-csrf-token", ""), actor["csrf_token"]):
                     raise HTTPException(403, "Your session could not confirm this request. Refresh and try again.")
             conn.execute("select set_config('app.user_id',%s,true)", (actor["id"],))
+            conn.execute("select set_config('app.allow_simulation',%s,true)", ("true" if settings.local_onboarding else "false",))
             request.state.actor = actor
             yield conn
 
@@ -295,6 +299,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return require_row(conn, "report_versions", report_id)
 
     @app.get(PREFIX + "/me/children")
+    # Parent ownership is independent of WhatsApp messaging consent.
     def children(conn=Depends(database)):
         return conn.execute("""select s.id,s.name,e.id as enrollment_id,e.class_id,e.roll_number,c.grade,c.section,sc.name as school_name
           from app.students s join app.enrollments e on e.student_id=s.id and e.ended_on is null
@@ -309,6 +314,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return conn.execute("""select a.* from app.attendance a join app.enrollments e on e.id=a.enrollment_id
             where e.student_id=%s order by a.attendance_date desc limit 90""", (student_id,)).fetchall()
 
+    @app.get(PREFIX + "/me/guardian-links")
+    def guardian_links(conn=Depends(database)):
+        return conn.execute("select app_private.my_guardian_links() as data").fetchone()["data"]
+
+    @app.delete(PREFIX + "/me/guardian-links/{link_id}/consent")
+    def withdraw_consent(link_id: UUID, conn=Depends(database)):
+        return write(conn,"withdraw_consent",None,link_id=link_id)
+
+    from .onboarding import register_onboarding
+    register_onboarding(app, settings, pool, database, passwords)
     return app
 
 app = create_app()

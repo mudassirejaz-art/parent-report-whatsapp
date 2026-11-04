@@ -1,6 +1,7 @@
 -- Disposable fixtures. Everything is rolled back, including on failure.
 \set ON_ERROR_STOP on
 begin;
+set local app.allow_simulation='true';
 set local client_min_messages=notice;
 create function pg_temp.expect_count(label text, query_text text, expected bigint) returns void language plpgsql as $$
 declare actual bigint;

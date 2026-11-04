@@ -1,5 +1,7 @@
 # Connected API workspace
 
+**Local guardian onboarding is now available:** See [ONBOARDING.md](ONBOARDING.md) for the teacher → student → separate parent simulation, secure contact storage and consent controls. APP_LOCAL_ONBOARDING must be explicitly enabled for fictional parent fixtures and simulated links.
+
 The app now has a real FastAPI/PostgreSQL workspace at **/workspace**. Existing demo routes remain browser-local and use the demo role switcher. The connected workspace requires a real local password session; changing demo state cannot grant access.
 
 ## Setup

@@ -22,6 +22,9 @@ import { HomeworkDiary } from "./diary";
 import { LeaveRequests } from "./leaves";
 const Tour = lazy(() => import("./tour").then((m) => ({ default: m.Tour })));
 const ConnectedWorkspace = lazy(() => import("./live"));
+const ConnectedOnboarding = lazy(() =>
+  import("./live/onboarding").then((m) => ({ default: m.PublicOnboarding })),
+);
 import { Denied } from "./components";
 import type { Role } from "./types";
 import "./styles.css";
@@ -99,6 +102,24 @@ function App() {
     <>
       <Scroll />
       <Routes>
+        <Route
+          path="/enroll"
+          element={
+            <Suspense fallback={<p role="status">Opening invitation…</p>}>
+              <ConnectedOnboarding />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/verify-guardian"
+          element={
+            <Suspense
+              fallback={<p role="status">Opening parent verification…</p>}
+            >
+              <ConnectedOnboarding verify />
+            </Suspense>
+          }
+        />
         <Route
           path="/workspace/*"
           element={

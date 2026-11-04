@@ -1,5 +1,7 @@
 # Verification — FastAPI / PostgreSQL milestone
 
+**Latest milestone:** [ONBOARDING-VERIFICATION.md](ONBOARDING-VERIFICATION.md) adds the 40-test API suite and 16-check local guardian journey. Results below retain the original connected-workspace milestone.
+
 Verified locally on 4 November 2026 with PostgreSQL 17.11, Python 3.12.14 and Chrome.
 
 | Check | Actual result |

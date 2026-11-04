@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ParentConsentSettings } from "./onboarding";
 import { Link, useParams } from "react-router-dom";
 import { Badge, Card, Empty, PageTitle } from "../components";
 import {
@@ -476,6 +477,7 @@ export function SchoolLifeView({ actor }: { actor: Actor }) {
         </>
       )}
       <h2>{parent ? "Your leave requests" : "Parent requests"}</h2>
+      {parent && <ParentConsentSettings />}
       <RemoteState {...leaves} retry={leaves.refresh} />
       {leaves.data?.map((leave) => (
         <Card key={leave.id}>

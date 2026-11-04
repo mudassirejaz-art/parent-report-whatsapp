@@ -21,6 +21,7 @@ from fastapi.testclient import TestClient
 from app.main import create_app
 from app.config import Settings
 from app.seed_local import seed
+from cryptography.fernet import Fernet
 
 @pytest.fixture
 def env():
@@ -36,7 +37,7 @@ def env():
             for file in sorted((ROOT/"db"/"migrations").glob("*.sql")):
                 conn.execute(file.read_text(encoding="utf-8"))
             manifest=seed(conn)
-        app=create_app(Settings(runtime_url,pool_size=3))
+        app=create_app(Settings(runtime_url,pool_size=3,local_onboarding=True,onboarding_key=Fernet.generate_key().decode()))
         clients=[]
         with TestClient(app) as root:
             def login(role):
@@ -47,7 +48,7 @@ def env():
                 client.headers["X-CSRF-Token"]=response.json()["csrf_token"]
                 clients.append(client)
                 return client
-            yield {"root":root,"login":login,"ids":manifest["ids"],"accounts":manifest["accounts"],"owner":owner_url}
+            yield {"root":root,"login":login,"ids":manifest["ids"],"accounts":manifest["accounts"],"owner":owner_url,"runtime":runtime_url,"app":app}
         for client in clients:
             client.close()
     finally:

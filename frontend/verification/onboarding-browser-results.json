@@ -1,0 +1,23 @@
+{
+  "passed": 16,
+  "checks": [
+    "Teacher creates a private student-bound invitation",
+    "Wrong admission number cannot submit a parent contact",
+    "Student submission remains pending before parent verification",
+    "Verification is explicitly labelled as local simulation",
+    "Messaging consent is never preselected or inferred",
+    "Wrong test code is rejected",
+    "Parent separately creates a local account and records consent",
+    "New parent login sees exactly the verified linked child",
+    "Teacher sees masked verified status and explicit local provenance",
+    "Newly linked parent receives only their own published report",
+    "Parent can withdraw WhatsApp consent",
+    "Withdrawing message consent preserves owned report access",
+    "An unrelated parent cannot open the newly linked child's report",
+    "The consumed student invitation cannot be reused",
+    "The completed parent verification cannot be replayed",
+    "Incomplete invitation URLs have a clear recovery state"
+  ],
+  "pageErrors": [],
+  "simulationOnly": true
+}

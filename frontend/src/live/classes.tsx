@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { GuardianLinks } from "./onboarding";
 import { Link, useParams } from "react-router-dom";
 import { Card, Badge, Empty, PageTitle } from "../components";
 import {
@@ -178,6 +179,7 @@ export function ClassView({ actor }: { actor: Actor }) {
               "Exams",
               "Attendance",
               "Homework",
+              "Parent links",
               ...(admin ? ["Class settings"] : []),
             ].map((x) => (
               <button
@@ -304,6 +306,7 @@ export function ClassView({ actor }: { actor: Actor }) {
               </Card>
             </>
           )}
+          {tab === "Parent links" && <GuardianLinks classId={classId} />}
           {tab === "Attendance" && (
             <AttendanceEditor
               classId={classId}

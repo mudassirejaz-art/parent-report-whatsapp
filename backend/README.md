@@ -6,6 +6,8 @@ FastAPI now provides real password login, revocable database sessions and guarde
 
 **Start here:** [API setup, login accounts and supported workflows](API.md). The database setup and access contract are documented below.
 
+**Guardian onboarding milestone:** Student-bound invitations, separate parent registration/sibling linking and consent withdrawal are now implemented for explicitly enabled local testing. See [ONBOARDING.md](ONBOARDING.md). No real phone verification or messaging provider is configured.
+
 ## Local Windows setup
 
 From the repository root, with Node.js, PowerShell and curl available:
