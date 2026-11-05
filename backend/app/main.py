@@ -336,6 +336,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     register_accounts(app,settings,pool,database,passwords)
     from .roster import register_roster
     register_roster(app,database)
+    from .whatsapp import register_webhook
+    register_webhook(app,settings.whatsapp_webhook,pool)
     return app
 
 app = create_app()

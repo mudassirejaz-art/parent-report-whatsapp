@@ -3,6 +3,7 @@ from pathlib import Path
 import os
 from urllib.parse import urlparse
 from dotenv import dotenv_values
+from .whatsapp import WebhookSettings
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -17,6 +18,7 @@ class Settings:
     onboarding_key: str = ""
     registration_enabled: bool = False
     local_recovery: bool = False
+    whatsapp_webhook: WebhookSettings | None = None
 
     @classmethod
     def load(cls):
@@ -55,5 +57,9 @@ class Settings:
             from cryptography.fernet import Fernet
             Fernet(key.encode())  # Fail early on an invalid key, never silently replace it.
         registration = value("APP_SCHOOL_REGISTRATION", "false" if production else "true").lower() == "true"
-        return cls(url, origins, production, local_onboarding=local_onboarding, onboarding_key=key,registration_enabled=registration,local_recovery=local_recovery)
+        webhook = None
+        if value("APP_WHATSAPP_WEBHOOK", "false").lower() == "true":
+            webhook = WebhookSettings(value("WHATSAPP_PHONE_NUMBER_ID"),
+                                      value("WHATSAPP_VERIFY_TOKEN"), value("WHATSAPP_APP_SECRET"))
+        return cls(url, origins, production, local_onboarding=local_onboarding, onboarding_key=key,registration_enabled=registration,local_recovery=local_recovery,whatsapp_webhook=webhook)
 
