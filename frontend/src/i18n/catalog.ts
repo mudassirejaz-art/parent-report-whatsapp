@@ -32,6 +32,34 @@ export const roman: Record<string, string> = {
     "Koi email nahi bheji jati. Test link yahan nazar aata hai aur 15 minute mein expire hota hai. Sirf farzi accounts istemal karein.",
   "Password updated. Other sessions have been signed out.":
     "Password update ho gaya. Baqi sessions band ho gaye hain.",
+  "Search students": "Talba talash karein",
+  "Name, admission or roll number": "Naam, admission ya roll number",
+  "No students match your search.":
+    "Aap ki talash mein koi talib-e-ilm nahi mila.",
+  "Import students from CSV": "CSV se talba ki list shamil karein",
+  "Download CSV template": "CSV ka namoona download karein",
+  "1. Choose a CSV file": "1. CSV file chunein",
+  "2. Preview and check": "2. List dekh kar check karein",
+  "3. Import students": "3. Talba shamil karein",
+  "Import preview": "Import se pehle list",
+  "CSV line": "CSV line",
+  Check: "Jaiza",
+  Ready: "Tayyar",
+  "All rows are ready to import.": "Tamam rows import ke liye tayyar hain.",
+  "Fix the highlighted rows, then choose the corrected file.":
+    "Nishan lagi rows durust karein, phir sahi file dobara chunein.",
+  "I reviewed these students for this class.":
+    "Maine is class ke liye talba ki list check kar li hai.",
+  "Parent WhatsApp numbers are collected and verified separately through Parent links.":
+    "Walidain ke WhatsApp numbers Parent links se alag jama aur verify hotay hain.",
+  "Duplicate admission number in this file.":
+    "Is file mein admission number dobara likha gaya hai.",
+  "Duplicate roll number in this file.":
+    "Is file mein roll number dobara likha gaya hai.",
+  "Admission number is already in use in this school.":
+    "Yeh admission number is school mein pehle se mojood hai.",
+  "Roll number is already in use in this class.":
+    "Yeh roll number is class mein pehle se mojood hai.",
   "Reading language": "Parhnay ki zaban",
   "Interface language": "Portal ki zaban",
   "School messages stay in their original language.":

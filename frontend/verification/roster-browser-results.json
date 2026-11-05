@@ -1,0 +1,20 @@
+{
+  "passed": 14,
+  "checks": [
+    "Assigned teacher sees import tool on mobile",
+    "CSV template downloads",
+    "Unexpected guardian contact column is rejected",
+    "Duplicate rows are highlighted and cannot import",
+    "Valid preview preserves quoted names and leading zeroes without writes",
+    "Choosing another file clears the old preview",
+    "Lost import response can be safely retried",
+    "Roster search finds name and admission identifiers",
+    "Re-uploading the same rows reports existing records",
+    "Mobile layout stays within viewport with scrollable preview",
+    "Import does not verify any parent",
+    "Revoked teacher assignment blocks a previously valid preview",
+    "Admin can see the final roster on desktop",
+    "No browser runtime errors"
+  ],
+  "errors": []
+}

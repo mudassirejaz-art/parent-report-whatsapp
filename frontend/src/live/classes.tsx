@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ClassRoster } from "./roster";
 import { GuardianLinks } from "./onboarding";
 import { Link, useParams } from "react-router-dom";
 import { Card, Badge, Empty, PageTitle } from "../components";
@@ -165,7 +166,7 @@ export function ClassView({ actor }: { actor: Actor }) {
         ← All classes
       </Link>
       <RemoteState {...remote} retry={remote.refresh} />
-      {remote.data && c && !remote.error && !remote.loading && (
+      {remote.data && c && !remote.error && c.id === classId && (
         <>
           <PageTitle
             title={"Class " + c.grade + "-" + c.section}
@@ -197,31 +198,12 @@ export function ClassView({ actor }: { actor: Actor }) {
           </div>
           {tab === "Students" && (
             <>
-              <Card>
-                <div className="table-wrap">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Roll number</th>
-                        <th>Student</th>
-                        <th>Admission</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {remote.data.students.map((s) => (
-                        <tr key={s.enrollment_id}>
-                          <td>{s.roll_number}</td>
-                          <td>{s.name}</td>
-                          <td>{s.admission_number}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                {!remote.data.students.length && (
-                  <p className="muted">Add the first student to this class.</p>
-                )}
-              </Card>
+              <ClassRoster
+                key={classId}
+                classId={classId}
+                students={remote.data.students}
+                onImported={remote.refresh}
+              />
               <Card>
                 <details>
                   <summary>Add a student</summary>

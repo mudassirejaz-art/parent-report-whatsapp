@@ -328,6 +328,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     register_schools(app,settings,pool,database,passwords)
     from .accounts import register_accounts
     register_accounts(app,settings,pool,database,passwords)
+    from .roster import register_roster
+    register_roster(app,database)
     return app
 
 app = create_app()
