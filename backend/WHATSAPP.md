@@ -8,6 +8,12 @@ Run `backend/.venv/Scripts/python.exe backend/scripts/send_whatsapp_test.py --mo
 
 For the school workflow, open a published exam in the connected workspace and select **Simulate WhatsApp queue**. Eligible fictional parent links enter the simulation history. The mock command tests the provider adapter separately from this database queue.
 
+## Process the local simulation queue
+
+Apply migration `014_simulation_worker.sql`, restart the API, and queue a simulation from a published exam. With local onboarding enabled, run `backend/.venv/Scripts/python.exe backend/scripts/run_whatsapp_simulation.py` to process up to 50 due jobs. Refresh **Recent simulations** in the exam to see the result. Each run is a bounded batch, so run the command again to process more work.
+
+To test recovery, start with `--fail first`, wait at least five seconds, then run again. Use `--fail always` for the failure path. Temporary failures retry after five and ten seconds and stop after three attempts. The worker rechecks class access and guardian consent, locks each job through the mock call, and updates simulation records only. It uses a fictional destination and an in-memory response.
+
 ## Test with Meta
 
 1. Create a WhatsApp Cloud API app and choose its test sender. Add and verify a test recipient in Meta's API Setup. Use a template approved for that sender, such as `hello_world` if available.

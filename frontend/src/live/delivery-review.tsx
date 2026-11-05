@@ -28,6 +28,10 @@ type Review = {
     created_at: string;
     queued: number;
     reports: number;
+    retrying: number;
+    delivered: number;
+    skipped: number;
+    failed: number;
   }[];
 };
 
@@ -106,6 +110,13 @@ export function DeliveryReview({ examId }: { examId: string }) {
           )}
           <details>
             <summary>Recent simulations</summary>
+            <button
+              className="btn secondary"
+              onClick={review.refresh}
+              disabled={review.loading}
+            >
+              Refresh simulation history
+            </button>
             {data.campaigns.length ? (
               <div className="table-wrap">
                 <table>
@@ -114,6 +125,10 @@ export function DeliveryReview({ examId }: { examId: string }) {
                       <th>Run time (PKT)</th>
                       <th>Reports</th>
                       <th>Recipients queued</th>
+                      <th>Retry scheduled</th>
+                      <th>Mock delivered</th>
+                      <th>Skipped</th>
+                      <th>Mock failed</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -126,6 +141,10 @@ export function DeliveryReview({ examId }: { examId: string }) {
                         </td>
                         <td>{run.reports}</td>
                         <td>{run.queued}</td>
+                        <td>{run.retrying}</td>
+                        <td>{run.delivered}</td>
+                        <td>{run.skipped}</td>
+                        <td>{run.failed}</td>
                       </tr>
                     ))}
                   </tbody>

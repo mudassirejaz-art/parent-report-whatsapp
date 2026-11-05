@@ -31,7 +31,8 @@ def test_review_matches_queue_and_lists_one_run_after_replay(env):
     assert len(history) == 1
     assert history[0]["id"] == result["id"]
     assert history[0]["queued"] == history[0]["reports"] == 2
-    assert set(history[0]) == {"id", "created_at", "queued", "reports"}
+    assert set(history[0]) == {"id", "created_at", "queued", "reports", "retrying", "delivered", "skipped", "failed"}
+    assert all(history[0][key] == 0 for key in ("retrying", "delivered", "skipped", "failed"))
 
 
 def test_review_explains_missing_consent_and_revoked_link(env):

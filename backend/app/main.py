@@ -236,9 +236,24 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.get(PREFIX + "/exams/{exam_id}/delivery-review")
     def delivery_review(exam_id: UUID, conn=Depends(database)):
-        return conn.execute(
+        review = conn.execute(
             "select app_private.report_delivery_review(%s) as data", (exam_id,)
         ).fetchone()["data"]
+        runs = review["campaigns"]
+        if runs:
+            rows = conn.execute("""select campaign_id,
+                count(*) filter(where status='queued') as queued,
+                count(*) filter(where status='queued' and simulation_attempts>0) as retrying,
+                count(*) filter(where status='delivered') as delivered,
+                count(*) filter(where status='failed' and failure_reason='simulation_ineligible') as skipped,
+                count(*) filter(where status='failed' and failure_reason is distinct from 'simulation_ineligible') as failed
+                from app.report_deliveries where is_simulation and campaign_id=any(%s::uuid[])
+                group by campaign_id""", ([run["id"] for run in runs],)).fetchall()
+            counts = {str(row["campaign_id"]): row for row in rows}
+            for run in runs:
+                for key in ("queued", "retrying", "delivered", "skipped", "failed"):
+                    run[key] = counts.get(run["id"], {}).get(key, 0)
+        return review
 
     @app.post(PREFIX + "/exams/{exam_id}/simulate-reports")
     def simulate(exam_id: UUID, body: m.Simulation, conn=Depends(database)):
