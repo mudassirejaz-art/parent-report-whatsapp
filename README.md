@@ -4,7 +4,7 @@ ParentReport is a full-stack school reporting portal for Pakistani schools and a
 
 **Stack** · React · TypeScript · Vite · FastAPI · PostgreSQL
 
-[Try it locally](#run-locally) · [How it works](#how-it-works) · [Verification](#verification)
+[Project showcase](https://mudassirejaz-art.github.io/parent-report-whatsapp/) · [Try it locally](#run-locally) · [How it works](#how-it-works) · [Verification](#verification)
 
 ## Product walkthrough
 
