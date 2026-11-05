@@ -1,21 +1,39 @@
 # ParentReport
 
-**Account security:** All connected roles can change passwords and revoke their sessions at `/workspace/account`. Explicit local-only recovery is available for fictional testing; no email delivery. See [account setup](backend/ACCOUNTS.md) and [verification](backend/ACCOUNTS-VERIFICATION.md): 75 API tests, 49 frontend tests, 50 database checks and 16 browser checks passed.
+A school-to-parent reporting portal for Pakistani schools and academies. Teachers publish results from a class workspace, guardians read their own children's records, and administrators manage school access. The interface supports English and Roman Urdu.
 
-**New school setup:** `/school/register` creates a separate school and first admin account. Admin School settings now persists school name/contact details, a readable accent colour and a private PostgreSQL-backed logo. See [setup](backend/SCHOOLS.md) and [verified results](backend/SCHOOLS-VERIFICATION.md): 60 API tests, 50 database checks, 49 frontend tests and 19 school browser checks passed.
+**Stack** · React · TypeScript · Vite · FastAPI · PostgreSQL
 
-**New: local guardian onboarding.** Teacher-generated student invitations, separate parent registration or sibling linking, masked encrypted contacts and consent withdrawal are now available. This is explicitly local testing without an OTP provider. See [onboarding setup](backend/ONBOARDING.md) and [latest verification](backend/ONBOARDING-VERIFICATION.md).
+[Try it locally](#run-locally) · [How it works](#how-it-works) · [Verification](#verification)
 
-School-to-parent progress reporting for Pakistani schools and academies. Frontend and backend share this repository while remaining separate applications.
+## Product walkthrough
 
-```text
-frontend/   React + TypeScript + Vite application, tests and verification evidence
-backend/    Plain PostgreSQL database, SQL migrations, access tests and local scripts
-```
+| School admin | Parent on mobile |
+| --- | --- |
+| <img src="frontend/verification/backend-admin-desktop.png" alt="ParentReport admin class portals with fictional data" width="680"> | <img src="frontend/verification/backend-parent-report-mobile.png" alt="Private mobile report card for a fictional student" width="190"> |
+| Create and activate class portals, assign teachers, and manage school branding. | Read published marks and report history for linked children. |
 
-## Run the frontend
+1. **Set up a class.** Assign a teacher, then add students manually or preview and import a CSV roster.
+2. **Link guardians.** A class invitation collects a contact. The guardian verifies the number separately and decides whether to opt in to WhatsApp updates.
+3. **Publish an assessment.** Enter subject marks and publish report snapshots. Guardians use a separate portal for reports, attendance, and notices.
+4. **Review delivery.** Staff see eligibility, skip reasons, and notification history. The local worker can simulate delivery, retry, and failure with fictional accounts.
 
-Requires Node 20.19+ and npm (Node 22 or 24 recommended).
+## How it works
+
+| Layer | Implementation |
+| --- | --- |
+| React workspace | Separate admin, teacher, and parent flows, a mobile parent portal, and a Remotion tour |
+| FastAPI | Session authentication, CSRF checks, class-scoped actions, and typed request validation |
+| PostgreSQL | Row-level access policies, transactional roster imports, published snapshots, and durable queues |
+| WhatsApp integration | Guardian OTP and consent, idempotent queueing, send-time eligibility checks, and signed Meta callbacks |
+
+The demo runs locally with fictional data. The Meta live pilot is configuration-gated and was tested with mocked provider traffic. Live delivery and public deployment have not been verified.
+
+## Run locally
+
+### Quick demo
+
+From the repository root, with Node 20.19+ and npm:
 
 ```sh
 cd frontend
@@ -23,42 +41,15 @@ npm install
 npm run dev
 ```
 
-Vite prints the local preview URL. Build with `npm run build`, run unit tests with `npm test`. A pnpm lockfile is also included for the dependency versions used during local verification; pnpm users can run `pnpm install`, `pnpm dev`, `pnpm build` and `pnpm test` from `frontend/`.
+Open the Vite URL and choose a demo role, or open `/tour`. This mode runs in the browser without PostgreSQL or Meta credentials.
 
-The demo includes school-admin, class-teacher and separate parent portals; class permissions; guardian verification and consent simulation; exams and marks; private reports; attendance; school/class notices and private student notes; homework; leave requests; branding; English/Roman Urdu interface; and a 20-second Remotion product tour. Direct parent–teacher chat has been removed.
+### Connected workspace
 
-The connected `/workspace` now uses real FastAPI password sessions and PostgreSQL APIs. The original demo routes remain browser-local mock experiences. Local seed records are fictional; guardian phone verification and WhatsApp delivery are not real integrations yet.
+Follow the [Windows PostgreSQL setup](backend/README.md) and [FastAPI quick start](backend/API.md), then open `http://127.0.0.1:5173/workspace`. The setup creates fictional login accounts in the ignored `backend/.local/accounts.json` file. To try parent onboarding and the local queue, see [WhatsApp simulation instructions](backend/WHATSAPP.md).
 
-See [frontend instructions](frontend/README.md) and [frontend verification results](frontend/verification/RESULTS.md) for role accounts, routes, run commands and limitations.
+## Verification
 
-## PostgreSQL database
+The live pilot change was checked against mocked Meta traffic. **31 targeted backend tests, 49 frontend tests, 50 database permission checks, and 16 local onboarding browser checks passed**, along with the frontend production build. The checks covered consent withdrawal, report isolation, OTP replay prevention, uncertain provider responses, and signed delivery receipts.
 
-The backend uses plain PostgreSQL 17+, with 25 domain tables plus private session/login-counter tables. FastAPI exposes typed admin/teacher/parent routes, scoped reads and guarded transactional writes. Direct parent–teacher chat remains removed. Runtime has no blanket table write grants.
+[Frontend verification](frontend/verification/RESULTS.md) · [API reference](backend/API.md) · [Production pilot runbook](backend/deploy/PILOT.md)
 
-On Windows, from this repository root:
-
-```powershell
-node backend/scripts/Download-Postgres.mjs
-powershell -NoProfile -ExecutionPolicy Bypass -File backend/scripts/Start-LocalPostgres.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File backend/scripts/Invoke-Database.ps1 migrate
-powershell -NoProfile -ExecutionPolicy Bypass -File backend/scripts/Invoke-Database.ps1 test
-```
-
-Local database: `parentreport` at `127.0.0.1:55432`. Database credentials and fictional account passwords are generated locally and ignored by Git. The database/API are local; source publication does not deploy a hosted service.
-
-## Run the connected backend
-
-From the repository root, after PostgreSQL is started and migrations applied:
-
-```powershell
-python -m venv backend/.venv
-backend/.venv/Scripts/python.exe -m pip install -r backend/requirements.txt
-backend/.venv/Scripts/python.exe backend/scripts/seed_local.py
-powershell -NoProfile -ExecutionPolicy Bypass -File backend/scripts/Start-Backend.ps1
-```
-
-Start the frontend in another terminal and open **http://127.0.0.1:5173/workspace**. Generated local login accounts are in `backend/.local/accounts.json`. API docs: **http://127.0.0.1:8000/docs**.
-
-For fictional parent links/local verification, set `APP_LOCAL_ONBOARDING=true` in the private backend/.env and restart the API. Production mode rejects that flag. The default in .env.example is disabled; no OTP or WhatsApp provider is configured. All eight migrations must be applied.
-
-See [API setup and endpoint map](backend/API.md), [database access contract](backend/README.md), and [actual verification](backend/API-VERIFICATION.md): **25 API tests, 50 database assertions, 49 frontend unit tests and 21 connected browser checks passed**; production frontend build passed.
