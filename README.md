@@ -1,6 +1,6 @@
-# ParentReport
+# ParentReport · School Report Cards and WhatsApp Notifications
 
-A school-to-parent reporting portal for Pakistani schools and academies. Teachers publish results from a class workspace, guardians read their own children's records, and administrators manage school access. The interface supports English and Roman Urdu.
+ParentReport is a full-stack school reporting portal for Pakistani schools and academies. Teachers publish results from a class workspace, guardians read their own children's records, and administrators manage school access. The interface supports English and Roman Urdu.
 
 **Stack** · React · TypeScript · Vite · FastAPI · PostgreSQL
 
@@ -52,4 +52,3 @@ Follow the [Windows PostgreSQL setup](backend/README.md) and [FastAPI quick star
 The live pilot change was checked against mocked Meta traffic. **31 targeted backend tests, 49 frontend tests, 50 database permission checks, and 16 local onboarding browser checks passed**, along with the frontend production build. The checks covered consent withdrawal, report isolation, OTP replay prevention, uncertain provider responses, and signed delivery receipts.
 
 [Frontend verification](frontend/verification/RESULTS.md) · [API reference](backend/API.md) · [Production pilot runbook](backend/deploy/PILOT.md)
-

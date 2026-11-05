@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ParentReport | School Report Cards and WhatsApp Notifications</title>
+  <meta name="description" content="Explore ParentReport, a full-stack school reporting project with private student report cards, teacher class workspaces, and a WhatsApp notification workflow.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mudassirejaz-art.github.io/parent-report-whatsapp/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ParentReport | School Report Cards and WhatsApp Notifications">
+  <meta property="og:description" content="A school reporting portfolio project built with React, FastAPI, and PostgreSQL.">
+  <meta property="og:url" content="https://mudassirejaz-art.github.io/parent-report-whatsapp/">
+  <meta property="og:image" content="https://raw.githubusercontent.com/mudassirejaz-art/parent-report-whatsapp/main/frontend/verification/backend-admin-desktop.png">
+  <meta property="og:image:alt" content="ParentReport administrator dashboard populated with fictional classes">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": "ParentReport",
+    "description": "A school reporting portal with private student report cards, class workspaces, and a WhatsApp notification workflow.",
+    "url": "https://mudassirejaz-art.github.io/parent-report-whatsapp/",
+    "codeRepository": "https://github.com/mudassirejaz-art/parent-report-whatsapp",
+    "programmingLanguage": ["Python", "TypeScript", "SQL"],
+    "author": {
+      "@type": "Person",
+      "name": "Mudassir Ijaz",
+      "url": "https://github.com/mudassirejaz-art"
+    }
+  }
+  </script>
+  <style>
+    :root { color-scheme: light; font: 16px/1.65 system-ui, sans-serif; color: #162b30; background: #f4f8f6; }
+    body { margin: 0; }
+    main { max-width: 68rem; margin: auto; padding: clamp(1rem, 5vw, 4rem); }
+    header { max-width: 48rem; padding: 1rem 0 2rem; }
+    h1 { font-size: clamp(2rem, 5vw, 3.8rem); line-height: 1.1; margin: .35rem 0 1rem; letter-spacing: -.04em; }
+    h2 { font-size: 1.5rem; line-height: 1.25; }
+    .label { color: #07665b; font-weight: 700; }
+    .intro { font-size: 1.15rem; }
+    a { color: #075c53; text-underline-offset: .18em; }
+    .button { display: inline-block; border-radius: .5rem; background: #075c53; color: white; padding: .6rem 1rem; font-weight: 650; }
+    img { display: block; width: 100%; height: auto; border: 1px solid #cbded6; border-radius: .75rem; }
+    figure { margin: 0 0 2rem; }
+    figcaption { margin-top: .5rem; color: #43595d; font-size: .9rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 1rem; }
+    article { background: #fff; border: 1px solid #cbded6; border-radius: .75rem; padding: 1rem; }
+    article h3 { margin: 0 0 .4rem; }
+    article p { margin: 0; }
+    footer { margin-top: 2rem; border-top: 1px solid #cbded6; padding-top: 1rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="label">Full-stack portfolio project · Mudassir Ijaz</p>
+      <h1>ParentReport</h1>
+      <p class="intro">A school reporting portal for Pakistani schools and academies, with private student report cards and a WhatsApp notification workflow.</p>
+      <p>Built with React, TypeScript, FastAPI, and PostgreSQL. The local demo uses fictional school records and simulated WhatsApp delivery.</p>
+      <p><a class="button" href="https://github.com/mudassirejaz-art/parent-report-whatsapp">View source and run the demo</a></p>
+    </header>
+    <figure>
+      <img src="https://raw.githubusercontent.com/mudassirejaz-art/parent-report-whatsapp/main/frontend/verification/backend-admin-desktop.png" width="1440" height="977" alt="School administrator dashboard with active and inactive fictional class portals">
+      <figcaption>Administrator workspace with fictional class records.</figcaption>
+    </figure>
+    <section aria-labelledby="workflow">
+      <h2 id="workflow">From class roster to private report card</h2>
+      <div class="grid">
+        <article><h3>School admins</h3><p>Set up classes, assign teachers, and control class access.</p></article>
+        <article><h3>Class teachers</h3><p>Import student rosters, enter marks, and publish assessment reports.</p></article>
+        <article><h3>Parents and guardians</h3><p>View linked children’s results in a mobile workspace with English and Roman Urdu controls.</p></article>
+      </div>
+    </section>
+    <section aria-labelledby="engineering">
+      <h2 id="engineering">Backend and WhatsApp workflow</h2>
+      <p>FastAPI sessions and PostgreSQL row-level policies keep class and guardian access scoped. The notification queue checks guardian verification and consent before dispatch. Signed Meta callbacks update delivery status.</p>
+      <p>The live WhatsApp pilot requires Meta credentials and production setup. The repository includes local setup instructions and tests for the mocked delivery flow.</p>
+    </section>
+    <footer><a href="https://github.com/mudassirejaz-art">More projects by Mudassir Ijaz</a></footer>
+  </main>
+</body>
+</html>
