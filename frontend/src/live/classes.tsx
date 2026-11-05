@@ -1,3 +1,4 @@
+import { DeliveryReview } from "./delivery-review";
 import { useState } from "react";
 import { ClassRoster } from "./roster";
 import { GuardianLinks } from "./onboarding";
@@ -666,33 +667,7 @@ export function ExamView() {
               )}
             </Card>
             {e.exam.status === "published" && (
-              <Card>
-                <h2>Reports are published</h2>
-                <p>
-                  Parents can view their linked child's report. WhatsApp sending
-                  remains a simulation.
-                </p>
-                <Link className="text-link" to="/workspace/reports">
-                  View report cards →
-                </Link>
-                <ActionButton
-                  secondary
-                  onAction={async () => {
-                    const result = await api<{ queued: number }>(
-                      "/exams/" + examId + "/simulate-reports",
-                      "POST",
-                      { idempotency_key: crypto.randomUUID() },
-                    );
-                    return (
-                      "Simulation only: " +
-                      result.queued +
-                      " eligible reports queued. No WhatsApp messages sent."
-                    );
-                  }}
-                >
-                  Simulate WhatsApp queue
-                </ActionButton>
-              </Card>
+              <DeliveryReview key={examId} examId={examId} />
             )}
           </>
         )}

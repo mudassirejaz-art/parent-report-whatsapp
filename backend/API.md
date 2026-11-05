@@ -54,6 +54,7 @@ All paths use `/api/v1`. Interactive docs provide the full typed request schemas
 | POST /classes/{id}/students | Student + enrollment transaction |
 | POST /classes/{id}/exams, GET /exams/{id} | Multi-subject exams and staff marks workspace |
 | PUT /exams/{id}/marks, POST /exams/{id}/publish | Validated marks and immutable report publication |
+| GET /exams/{id}/delivery-review | Staff-only eligibility by published report and latest 20 simulation runs |
 | POST /exams/{id}/simulate-reports | Simulated queue with idempotency key |
 | GET/PUT /classes/{id}/attendance | Daily scoped attendance |
 | GET/POST /notices, POST /notices/{id}/acknowledge | Scoped notices and acknowledgement |
@@ -99,3 +100,7 @@ See [VERIFICATION.md](VERIFICATION.md) for actual results.
 
 Real guardian OTP, parent recovery/password reset and real WhatsApp workers/webhooks remain future integrations. Local guardian onboarding, school registration and private logo storage are implemented. The live UI cannot mark a real guardian verified. The original tour and remaining demo screens still work in demo mode. No messaging inbox was added.
 
+
+### Delivery review
+
+Open a published exam in the connected workspace to see eligible recipient counts, skip reasons, and recent simulation runs. The API checks current school and class access before returning the review. The queue rechecks eligibility when a run starts. Simulation history is limited to the latest 20 runs for the exam and excludes contact details. Apply migration `012_report_delivery_review.sql` and restart the API to enable the view.

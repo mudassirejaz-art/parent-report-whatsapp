@@ -234,6 +234,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def publish(exam_id: UUID, conn=Depends(database)):
         return write(conn, "publish_exam", None, exam_id=exam_id)
 
+    @app.get(PREFIX + "/exams/{exam_id}/delivery-review")
+    def delivery_review(exam_id: UUID, conn=Depends(database)):
+        return conn.execute(
+            "select app_private.report_delivery_review(%s) as data", (exam_id,)
+        ).fetchone()["data"]
+
     @app.post(PREFIX + "/exams/{exam_id}/simulate-reports")
     def simulate(exam_id: UUID, body: m.Simulation, conn=Depends(database)):
         return write(conn, "simulate_reports", body, exam_id=exam_id)
