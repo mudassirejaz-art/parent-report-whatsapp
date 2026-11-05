@@ -69,9 +69,14 @@ type GuardianRow = {
   invite_expires_at: string | null;
 };
 export function GuardianLinks({ classId }: { classId: string }) {
-  const mode = useRemote<{ local_testing: boolean }>("/onboarding/config");
+  const mode = useRemote<{
+    local_testing: boolean;
+    provider_configured: boolean;
+  }>("/onboarding/config");
   const rows = useRemote<GuardianRow[]>(
-    mode.data?.local_testing ? "/classes/" + classId + "/guardian-links" : null,
+    mode.data?.local_testing || mode.data?.provider_configured
+      ? "/classes/" + classId + "/guardian-links"
+      : null,
   );
   const [links, setLinks] = useState<Record<string, string>>({});
   return (
@@ -79,14 +84,14 @@ export function GuardianLinks({ classId }: { classId: string }) {
       <h2>Parent linking</h2>
       <RemoteState {...mode} retry={mode.refresh} />
       {mode.data &&
-        (!mode.data.local_testing ? (
+        (!mode.data.local_testing && !mode.data.provider_configured ? (
           <p>
             Guardian onboarding is not enabled. Ask your school administrator to
             configure verification.
           </p>
         ) : (
           <>
-            <SimulationNotice />
+            {mode.data.local_testing && <SimulationNotice />}
             <p>
               Create a private invitation for one student. The student submits a
               guardian number; the parent completes a separate verification and
@@ -222,7 +227,8 @@ type VerificationInfo = InviteInfo & {
   student_name: string;
   guardian_name: string;
   phone_masked: string;
-  local_test_code: string;
+  local_test_code?: string;
+  is_simulation: boolean;
 };
 function useCapability<T>(path: string, token: string) {
   const [info, setInfo] = useState<T | null>(null),
@@ -242,7 +248,10 @@ export function PublicOnboarding({ verify = false }: { verify?: boolean }) {
   const loc = useLocation();
   const token = loc.hash.slice(1);
   const valid = /^[A-Za-z0-9_-]{43}$/.test(token);
-  const mode = useRemote<{ local_testing: boolean }>("/onboarding/config");
+  const mode = useRemote<{
+    local_testing: boolean;
+    provider_configured: boolean;
+  }>("/onboarding/config");
   return (
     <main className="live-onboarding">
       <Link className="brand" to="/workspace">
@@ -250,7 +259,7 @@ export function PublicOnboarding({ verify = false }: { verify?: boolean }) {
       </Link>
       <RemoteState {...mode} retry={mode.refresh} />
       {mode.data &&
-        (!mode.data.local_testing ? (
+        (!mode.data.local_testing && !mode.data.provider_configured ? (
           <Empty title="Verification is unavailable">
             <p>
               Your school has not enabled a verification provider. Contact the
@@ -259,11 +268,19 @@ export function PublicOnboarding({ verify = false }: { verify?: boolean }) {
           </Empty>
         ) : valid ? (
           <>
-            <SimulationNotice />
+            {mode.data.local_testing && <SimulationNotice />}
             {verify ? (
-              <ParentVerification key={token} token={token} />
+              <ParentVerification
+                key={token}
+                token={token}
+                local={mode.data.local_testing}
+              />
             ) : (
-              <StudentSubmission key={token} token={token} />
+              <StudentSubmission
+                key={token}
+                token={token}
+                local={mode.data.local_testing}
+              />
             )}
           </>
         ) : (
@@ -277,7 +294,13 @@ export function PublicOnboarding({ verify = false }: { verify?: boolean }) {
     </main>
   );
 }
-function StudentSubmission({ token }: { token: string }) {
+function StudentSubmission({
+  token,
+  local,
+}: {
+  token: string;
+  local: boolean;
+}) {
   const { info, error } = useCapability<InviteInfo>(
     "/onboarding/invite-info",
     token,
@@ -326,8 +349,9 @@ function StudentSubmission({ token }: { token: string }) {
           <Badge>Verification pending</Badge>
           <h2>Now the parent completes step 2.</h2>
           <p>
-            The guardian must review the child details, enter the separate local
-            test code and explicitly choose whether to consent.
+            {local
+              ? "The guardian must review the child details, enter the separate local test code and choose whether to consent."
+              : "Share this private link with the guardian. They need the code sent to their WhatsApp to verify the number."}
           </p>
           <a className="btn" href={result} target="_blank" rel="noreferrer">
             Open separate parent verification
@@ -358,7 +382,13 @@ function StudentSubmission({ token }: { token: string }) {
     </>
   );
 }
-function ParentVerification({ token }: { token: string }) {
+function ParentVerification({
+  token,
+  local,
+}: {
+  token: string;
+  local: boolean;
+}) {
   const { info, error } = useCapability<VerificationInfo>(
     "/onboarding/verification-info",
     token,
@@ -374,7 +404,9 @@ function ParentVerification({ token }: { token: string }) {
         <Badge>
           {complete === "declined"
             ? "Consent declined"
-            : "Local parent link complete"}
+            : local
+              ? "Local parent link complete"
+              : "Parent link complete"}
         </Badge>
         <h1>
           {complete === "declined"
@@ -384,7 +416,9 @@ function ParentVerification({ token }: { token: string }) {
         <p>
           {complete === "declined"
             ? "No new guardian link or messaging consent was created. Ask the school for a fresh invitation if you change your mind."
-            : "This was a local simulation. Sign in to read only your linked child's published records."}
+            : local
+              ? "This was a local simulation. Sign in to read only your linked child's published records."
+              : "Sign in to read your linked child's published records."}
         </p>
         <Link className="btn" to="/workspace">
           Go to parent sign in
@@ -416,19 +450,27 @@ function ParentVerification({ token }: { token: string }) {
             If these details are wrong, stop and ask the school for a corrected
             invitation.
           </p>
-          <div className="live-test-code">
-            <strong>
-              Local test code: <code>{info.local_test_code}</code>
-            </strong>
-            <p>
-              This code is shown only in explicitly enabled local mode. No real
-              OTP was sent.
-            </p>
-          </div>
+          {local && (
+            <div className="live-test-code">
+              <strong>
+                Local test code: <code>{info.local_test_code}</code>
+              </strong>
+              <p>
+                This code is shown only in explicitly enabled local mode. No
+                real OTP was sent.
+              </p>
+            </div>
+          )}
           <label className="live-share-label">
-            Enter local test code
+            {local
+              ? "Enter local test code"
+              : "Enter WhatsApp verification code"}
             <input
-              aria-label="Enter local test code"
+              aria-label={
+                local
+                  ? "Enter local test code"
+                  : "Enter WhatsApp verification code"
+              }
               inputMode="numeric"
               autoComplete="one-time-code"
               maxLength={6}
@@ -467,7 +509,11 @@ function ParentVerification({ token }: { token: string }) {
           </div>
           {!existing ? (
             <RemoteForm
-              label="Verify locally & create account"
+              label={
+                local
+                  ? "Verify locally & create account"
+                  : "Verify number & create account"
+              }
               fields={[
                 { name: "email", label: "Parent email", type: "email" },
                 {
@@ -482,14 +528,18 @@ function ParentVerification({ token }: { token: string }) {
                 },
               ]}
               onSubmit={async (v) => {
-                if (!consent)
+                if (local && !consent)
                   throw Error(
                     "Choose whether to give consent. It is never selected automatically.",
                   );
                 if (v.password !== v.confirm)
                   throw Error("The passwords do not match.");
                 if (code.length !== 6)
-                  throw Error("Enter the six-digit local test code.");
+                  throw Error(
+                    local
+                      ? "Enter the six-digit local test code."
+                      : "Enter the six-digit WhatsApp verification code.",
+                  );
                 await api("/onboarding/register", "POST", {
                   token,
                   code,
@@ -505,7 +555,7 @@ function ParentVerification({ token }: { token: string }) {
               <p className="live-success">Signed in as {actor.name}</p>
               <ActionButton
                 onAction={async () => {
-                  if (!consent)
+                  if (local && !consent)
                     throw Error(
                       "Explicit guardian consent is required to complete this test flow.",
                     );
@@ -517,7 +567,9 @@ function ParentVerification({ token }: { token: string }) {
                   setComplete("verified");
                 }}
               >
-                Verify locally & link this child
+                {local
+                  ? "Verify locally & link this child"
+                  : "Verify number & link this child"}
               </ActionButton>
             </>
           ) : (
@@ -542,23 +594,25 @@ function ParentVerification({ token }: { token: string }) {
               }}
             />
           )}
-          <ActionButton
-            secondary
-            onAction={async () => {
-              if (code.length !== 6)
-                throw Error(
-                  "Enter the local test code before recording your choice.",
-                );
-              await api("/onboarding/decline", "POST", {
-                token,
-                code,
-                consent: false,
-              });
-              setComplete("declined");
-            }}
-          >
-            I do not consent
-          </ActionButton>
+          {local && (
+            <ActionButton
+              secondary
+              onAction={async () => {
+                if (code.length !== 6)
+                  throw Error(
+                    "Enter the local test code before recording your choice.",
+                  );
+                await api("/onboarding/decline", "POST", {
+                  token,
+                  code,
+                  consent: false,
+                });
+                setComplete("declined");
+              }}
+            >
+              I do not consent
+            </ActionButton>
+          )}
         </Card>
       )}
     </>

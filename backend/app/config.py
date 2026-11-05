@@ -3,7 +3,8 @@ from pathlib import Path
 import os
 from urllib.parse import urlparse
 from dotenv import dotenv_values
-from .whatsapp import WebhookSettings
+from uuid import UUID
+from .whatsapp import CloudSender, LiveWhatsApp, WebhookSettings
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -19,6 +20,7 @@ class Settings:
     registration_enabled: bool = False
     local_recovery: bool = False
     whatsapp_webhook: WebhookSettings | None = None
+    whatsapp_live: LiveWhatsApp | None = None
 
     @classmethod
     def load(cls):
@@ -61,5 +63,18 @@ class Settings:
         if value("APP_WHATSAPP_WEBHOOK", "false").lower() == "true":
             webhook = WebhookSettings(value("WHATSAPP_PHONE_NUMBER_ID"),
                                       value("WHATSAPP_VERIFY_TOKEN"), value("WHATSAPP_APP_SECRET"))
-        return cls(url, origins, production, local_onboarding=local_onboarding, onboarding_key=key,registration_enabled=registration,local_recovery=local_recovery,whatsapp_webhook=webhook)
+        live = None
+        if value("APP_WHATSAPP_LIVE", "false").lower() == "true":
+            if not production or not webhook or not key:
+                raise RuntimeError("Live WhatsApp requires production HTTPS, webhook settings and ONBOARDING_KEY.")
+            from cryptography.fernet import Fernet
+            Fernet(key.encode())
+            otp, report = value("WHATSAPP_OTP_TEMPLATE"), value("WHATSAPP_REPORT_TEMPLATE")
+            if not otp or not report or otp == report:
+                raise RuntimeError("Configure separate approved OTP and report templates.")
+            live = LiveWhatsApp(
+                CloudSender(value("WHATSAPP_GRAPH_VERSION"), webhook.phone_number_id, value("WHATSAPP_ACCESS_TOKEN")),
+                str(UUID(value("WHATSAPP_SCHOOL_ID"))), otp, report, value("WHATSAPP_TEMPLATE_LANGUAGE", "en_US"),
+            )
+        return cls(url, origins, production, local_onboarding=local_onboarding, onboarding_key=key,registration_enabled=registration,local_recovery=local_recovery,whatsapp_webhook=webhook,whatsapp_live=live)
 

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "../components";
 import { api, ApiError } from "./api";
@@ -16,6 +16,14 @@ const labels = {
 };
 
 type Review = {
+  live_enabled: boolean;
+  live_status?: {
+    queued: number;
+    unconfirmed: number;
+    sent: number;
+    delivered: number;
+    failed: number;
+  };
   blocker: "not_published" | "class_sending_disabled" | null;
   reports: {
     report_id: string;
@@ -39,6 +47,8 @@ export function DeliveryReview({ examId }: { examId: string }) {
   const endpoint = "/exams/" + examId;
   const review = useRemote<Review>(endpoint + "/delivery-review");
   const requestId = useRef<string | null>(null);
+  const liveRequest = useRef<string | null>(null);
+  const [confirmed, setConfirmed] = useState(false);
   const data = review.data;
   const eligible =
     data?.reports.filter((row) => row.eligible_recipients > 0).length ?? 0;
@@ -46,9 +56,7 @@ export function DeliveryReview({ examId }: { examId: string }) {
   return (
     <Card>
       <h2>Reports are published</h2>
-      <p>
-        Simulation only. Parents can view published report cards in the portal.
-      </p>
+      <p>Parents can view published report cards in the portal.</p>
       <Link className="text-link" to="/workspace/reports">
         View report cards →
       </Link>
@@ -56,6 +64,59 @@ export function DeliveryReview({ examId }: { examId: string }) {
       <RemoteState {...review} retry={review.refresh} />
       {data && !review.error && (
         <>
+          {data.live_enabled && data.live_status && (
+            <section>
+              <h3>Live WhatsApp notifications</h3>
+              <p className="helper">
+                {data.live_status.queued} queued ·{" "}
+                {data.live_status.unconfirmed} awaiting confirmation ·{" "}
+                {data.live_status.sent} accepted · {data.live_status.delivered}{" "}
+                delivered · {data.live_status.failed} failed
+              </p>
+              {!data.blocker && eligible > 0 && (
+                <>
+                  <label className="live-consent">
+                    <input
+                      type="checkbox"
+                      checked={confirmed}
+                      onChange={(event) => setConfirmed(event.target.checked)}
+                    />
+                    <span>
+                      I confirm these are real WhatsApp notifications for
+                      verified guardians who opted in.
+                    </span>
+                  </label>
+                  {confirmed && (
+                    <ActionButton
+                      onAction={async () => {
+                        liveRequest.current ??= crypto.randomUUID();
+                        const result = await api<{ queued: number }>(
+                          endpoint + "/send-reports",
+                          "POST",
+                          {
+                            idempotency_key: liveRequest.current,
+                          },
+                        );
+                        liveRequest.current = null;
+                        review.refresh();
+                        return result.queued + " new notifications queued.";
+                      }}
+                    >
+                      Queue real WhatsApp notifications
+                    </ActionButton>
+                  )}
+                </>
+              )}
+              <button
+                className="btn secondary"
+                onClick={review.refresh}
+                disabled={review.loading}
+              >
+                Refresh live status
+              </button>
+            </section>
+          )}
+          <p className="helper">The simulation queue uses a fake provider.</p>
           {data.blocker && <p className="helper">{labels[data.blocker]}</p>}
           <p className="helper">
             {eligible} ready · {data.reports.length - eligible} skipped

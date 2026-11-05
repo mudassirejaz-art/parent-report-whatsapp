@@ -5,6 +5,7 @@ import hmac
 import json
 import re
 from dataclasses import dataclass, field
+from uuid import UUID
 
 import httpx
 from fastapi import HTTPException, Request
@@ -41,22 +42,29 @@ class CloudSender:
         if not re.fullmatch(r"v[0-9]+\.[0-9]+", self.version) or not phone_id_valid(self.phone_number_id) or not self.access_token:
             raise ValueError("Configure the Meta API version, phone number ID and access token.")
 
-    def send_template(self, client: httpx.Client, recipient: str, template: str, language: str) -> str:
-        """Send a pre-approved template with no dynamic fields."""
+    def send_template(self, client: httpx.Client, recipient: str, template: str, language: str,
+                      *, code: str | None = None, tracking_id: str | None = None) -> str:
         if not re.fullmatch(r"\+[1-9][0-9]{6,14}", recipient):
             raise ValueError("Recipient must be in international +countrycode format.")
         if not re.fullmatch(r"[a-z0-9_]{1,512}", template) or not re.fullmatch(r"[a-z]{2,3}(?:_[A-Z]{2})?", language):
             raise ValueError("Invalid template name or language.")
+        message = {"messaging_product": "whatsapp", "to": recipient[1:], "type": "template",
+                   "template": {"name": template, "language": {"code": language}}}
+        if code is not None:
+            if not re.fullmatch(r"[0-9]{6}", code):
+                raise ValueError("Invalid verification code.")
+            parameters = [{"type": "text", "text": code}]
+            message["template"]["components"] = [
+                {"type": "body", "parameters": parameters},
+                {"type": "button", "sub_type": "url", "index": "0", "parameters": parameters},
+            ]
+        if tracking_id is not None:
+            message["biz_opaque_callback_data"] = tracking_id
         try:
             result = client.post(
                 f"https://graph.facebook.com/{self.version}/{self.phone_number_id}/messages",
                 headers={"Authorization": f"Bearer {self.access_token}"},
-                json={
-                    "messaging_product": "whatsapp",
-                    "to": recipient[1:],
-                    "type": "template",
-                    "template": {"name": template, "language": {"code": language}},
-                },
+                json=message,
                 timeout=10,
                 follow_redirects=False,
             )
@@ -71,6 +79,15 @@ class CloudSender:
         if not valid_message_id(message_id):
             raise RuntimeError("Meta acceptance could not be confirmed. Check delivery before retrying.")
         return message_id
+
+
+@dataclass(frozen=True)
+class LiveWhatsApp:
+    sender: CloudSender
+    school_id: str
+    otp_template: str
+    report_template: str
+    language: str
 
 
 def valid_message_id(value) -> bool:
@@ -96,7 +113,12 @@ def delivery_events(payload, phone_number_id):
             for event in objects(value.get("statuses")):
                 message_id, status = event.get("id"), event.get("status")
                 if valid_message_id(message_id) and isinstance(status, str) and status in STATUSES:
-                    yield message_id, status
+                    tracking = event.get("biz_opaque_callback_data")
+                    try:
+                        tracking = str(UUID(tracking))
+                    except (ValueError, AttributeError, TypeError):
+                        tracking = None
+                    yield message_id, status, tracking
 
 
 def register_webhook(app, config: WebhookSettings | None, pool):
@@ -121,7 +143,10 @@ def register_webhook(app, config: WebhookSettings | None, pool):
 
     def record(phone_number_id, events):
         with pool.connection() as conn:
-            for message_id, status in events:
+            for message_id, status, tracking in events:
+                if tracking:
+                    conn.execute("select app_private.correlate_live_status(%s,%s,%s)",
+                                 (tracking, phone_number_id, message_id))
                 conn.execute("select app_private.record_whatsapp_status(%s,%s,%s)",
                              (phone_number_id, message_id, status))
 
@@ -141,7 +166,8 @@ def register_webhook(app, config: WebhookSettings | None, pool):
             payload = json.loads(body)
         except (ValueError, RecursionError):
             raise HTTPException(400, "Invalid webhook payload.") from None
-        events = sorted(set(delivery_events(payload, settings.phone_number_id)))
+        events = sorted(set(delivery_events(payload, settings.phone_number_id)),
+                        key=lambda event: (event[0], event[1], event[2] or ""))
         if events:
             await run_in_threadpool(record, settings.phone_number_id, events)
         return {"received": True}

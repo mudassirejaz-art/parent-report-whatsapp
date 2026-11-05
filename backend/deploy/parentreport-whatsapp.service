@@ -1,0 +1,16 @@
+[Unit]
+Description=ParentReport WhatsApp worker
+After=network-online.target parentreport-api.service
+Wants=network-online.target
+
+[Service]
+User=parentreport
+WorkingDirectory=/opt/parentreport
+EnvironmentFile=/etc/parentreport/runtime.env
+ExecStart=/opt/parentreport/backend/.venv/bin/python backend/scripts/run_whatsapp_live.py --send --watch
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

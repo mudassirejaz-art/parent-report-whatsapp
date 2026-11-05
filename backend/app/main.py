@@ -32,6 +32,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         raise RuntimeError("Local verification is forbidden in production.")
     if settings.secure_cookies and settings.local_recovery:
         raise RuntimeError("Local password recovery is forbidden in production.")
+    if settings.whatsapp_live and (not settings.secure_cookies or not settings.whatsapp_webhook
+                                   or settings.whatsapp_live.sender.phone_number_id != settings.whatsapp_webhook.phone_number_id):
+        raise RuntimeError("Live WhatsApp requires HTTPS and a matching webhook sender.")
     pool = ConnectionPool(settings.database_url, min_size=1, max_size=settings.pool_size, open=False,
                           timeout=5, kwargs={"row_factory": dict_row, "connect_timeout": 5})
 
@@ -95,6 +98,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                     raise HTTPException(403, "Your session could not confirm this request. Refresh and try again.")
             conn.execute("select set_config('app.user_id',%s,true)", (actor["id"],))
             conn.execute("select set_config('app.allow_simulation',%s,true)", ("true" if settings.local_onboarding else "false",))
+            if settings.whatsapp_live:
+                conn.execute("select set_config('app.whatsapp_school',%s,true)", (settings.whatsapp_live.school_id,))
             request.state.actor = actor
             yield conn
 
@@ -114,7 +119,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def health():
         with pool.connection() as conn:
             conn.execute("select 1")
-        return {"status": "ok", "database": "postgresql", "whatsapp": "simulation_only"}
+        return {"status": "ok", "database": "postgresql",
+                "whatsapp": "live_configured" if settings.whatsapp_live else "simulation_only"}
 
     @app.post(PREFIX + "/auth/login")
     def login(body: m.Login, request: Request, response: Response):
@@ -253,7 +259,29 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             for run in runs:
                 for key in ("queued", "retrying", "delivered", "skipped", "failed"):
                     run[key] = counts.get(run["id"], {}).get(key, 0)
+        live = settings.whatsapp_live
+        review["live_enabled"] = bool(live and conn.execute(
+            "select exists(select 1 from app.exams where id=%s and school_id=%s) as enabled",
+            (exam_id, live.school_id),
+        ).fetchone()["enabled"])
+        if review["live_enabled"]:
+            review["live_status"] = conn.execute("""select
+                count(*) filter(where d.status='queued' and d.live_attempted_at is null) as queued,
+                count(*) filter(where (d.status='queued' and d.live_attempted_at is not null)
+                    or (d.status='failed' and d.failure_reason='live_acceptance_unconfirmed')) as unconfirmed,
+                count(*) filter(where d.status='sent') as sent,
+                count(*) filter(where d.status in ('delivered','read')) as delivered,
+                count(*) filter(where d.status='failed' and d.failure_reason is distinct from 'live_acceptance_unconfirmed') as failed
+                from app.report_deliveries d join app.report_versions r on r.id=d.report_id
+                where r.exam_id=%s and not d.is_simulation""", (exam_id,)).fetchone()
         return review
+
+    @app.post(PREFIX + "/exams/{exam_id}/send-reports")
+    def send_reports(exam_id: UUID, body: m.Simulation, conn=Depends(database)):
+        if not settings.whatsapp_live:
+            raise HTTPException(503, "Live WhatsApp is not configured.")
+        return conn.execute("select app_private.queue_live_reports(%s,%s,%s) as data",
+                            (exam_id, str(body.idempotency_key), settings.whatsapp_live.sender.phone_number_id)).fetchone()["data"]
 
     @app.post(PREFIX + "/exams/{exam_id}/simulate-reports")
     def simulate(exam_id: UUID, body: m.Simulation, conn=Depends(database)):

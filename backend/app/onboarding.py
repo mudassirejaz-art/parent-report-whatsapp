@@ -1,8 +1,9 @@
-"""Capability-based, student-bound local guardian onboarding. No provider calls."""
+"""Capability-based, student-bound guardian onboarding."""
 import hashlib
 import hmac
 import re
 import secrets
+import httpx
 from typing import Annotated
 from uuid import UUID
 from cryptography.fernet import Fernet
@@ -47,11 +48,12 @@ class Registration(Verification):
 
 def register_onboarding(app,settings,pool,database,passwords):
     prefix="/api/v1"
-    cipher=Fernet(settings.onboarding_key.encode()) if settings.local_onboarding else None
+    live = settings.whatsapp_live
+    cipher=Fernet(settings.onboarding_key.encode()) if settings.local_onboarding or live else None
 
     def enabled():
-        if not settings.local_onboarding or settings.secure_cookies:
-            raise HTTPException(503,"Local verification is disabled. A real OTP provider is not configured.")
+        if not settings.local_onboarding and not live:
+            raise HTTPException(503,"Guardian verification is not configured.")
 
     def keyed(value):
         return hmac.new(settings.onboarding_key.encode(),value.encode(),hashlib.sha256).hexdigest()
@@ -80,14 +82,17 @@ def register_onboarding(app,settings,pool,database,passwords):
         if password_to_hash is not None:
             payload["password_hash"]=passwords.hash(password_to_hash)
         with pool.connection() as conn:
-            conn.execute("select set_config('app.allow_simulation','true',true)")
+            if live:
+                conn.execute("select set_config('app.whatsapp_school',%s,true)", (live.school_id,))
+            else:
+                conn.execute("select set_config('app.allow_simulation','true',true)")
             result=invoke(conn,operation,payload)
         # Business errors are checked AFTER commit, so bad attempts are durable.
         return checked(result)
 
     @app.get(prefix+"/onboarding/config")
     def mode():
-        return {"local_testing":settings.local_onboarding and not settings.secure_cookies,"provider_configured":False}
+        return {"local_testing":settings.local_onboarding,"provider_configured":live is not None}
 
     @app.get(prefix+"/classes/{class_id}/guardian-links")
     def statuses(class_id:UUID,conn=Depends(database)):
@@ -99,7 +104,7 @@ def register_onboarding(app,settings,pool,database,passwords):
         enabled()
         token=secrets.token_urlsafe(32)
         result=checked(invoke(conn,"invite",{"class_id":str(class_id),"enrollment_id":str(body.enrollment_id),"token_hash":hashed(token)}))
-        return {**result,"token":token,"path":"/enroll#"+token,"is_simulation":True}
+        return {**result,"token":token,"path":"/enroll#"+token,"is_simulation":live is None}
 
     @app.delete(prefix+"/classes/{class_id}/guardian-invites/{invite_id}")
     def revoke(class_id:UUID,invite_id:UUID,conn=Depends(database)):
@@ -114,18 +119,24 @@ def register_onboarding(app,settings,pool,database,passwords):
     def submit(body:Submission,request:Request):
         enabled()
         cap=secrets.token_urlsafe(32)
-        code=local_code(cap)
+        code=f"{secrets.randbelow(1_000_000):06d}" if live else local_code(cap)
         result=public_action(request,"submit",{
             "token_hash":hashed(body.token),"admission_number":body.admission_number,"guardian_name":body.guardian_name,
             "phone_ciphertext":cipher.encrypt(body.phone.encode()).decode(),"phone_hmac":keyed("phone:"+body.phone),
             "phone_masked":body.phone[:3]+" *** *** "+body.phone[-4:],
             "capability_hash":hashed(cap),"challenge_hash":keyed(cap+":"+code)})
-        return {**result,"verification_path":"/verify-guardian#"+cap,"token":cap,"is_simulation":True}
+        if live:
+            try:
+                with httpx.Client(trust_env=False) as client:
+                    live.sender.send_template(client, body.phone, live.otp_template, live.language, code=code)
+            except (ValueError, RuntimeError):
+                raise HTTPException(502,"Verification delivery could not be confirmed. Ask your school for a new invitation.") from None
+        return {**result,"verification_path":"/verify-guardian#"+cap,"token":cap,"is_simulation":live is None}
 
     @app.post(prefix+"/onboarding/verification-info")
     def verification_info(body:Capability,request:Request):
         result=public_action(request,"verification_info",{"capability_hash":hashed(body.token)})
-        return {**result,"local_test_code":local_code(body.token)}
+        return {**result,"local_test_code":local_code(body.token)} if not live else result
 
     @app.post(prefix+"/onboarding/register")
     def register(body:Registration,request:Request):

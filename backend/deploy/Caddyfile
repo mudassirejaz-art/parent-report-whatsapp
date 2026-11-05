@@ -1,0 +1,12 @@
+{$PARENTREPORT_HOST} {
+    encode zstd gzip
+    @backend path /api/v1/* /health
+    handle @backend {
+        reverse_proxy 127.0.0.1:8000
+    }
+    handle {
+        root * /srv/parentreport
+        try_files {path} /index.html
+        file_server
+    }
+}
