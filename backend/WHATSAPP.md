@@ -1,6 +1,12 @@
 # Meta WhatsApp Cloud API
 
-This first stage includes the template sender, an explicit test command, and signed delivery callbacks. Report sending in the workspace still uses the simulation. The test command reads one explicitly configured recipient and has no access to the school roster.
+This first stage includes the template sender, an explicit test command, and signed delivery callbacks. Report sending in the workspace uses the simulation. The live test command reads one explicitly configured recipient.
+
+## Local mock mode
+
+Run `backend/.venv/Scripts/python.exe backend/scripts/send_whatsapp_test.py --mock` from the repository root. This exercises the same template sender and response parser with an in-memory Meta response and a fictional recipient. The mock works without reading `backend/.env` or opening a network connection.
+
+For the school workflow, open a published exam in the connected workspace and select **Simulate WhatsApp queue**. Eligible fictional parent links enter the simulation history. The mock command tests the provider adapter separately from this database queue.
 
 ## Test with Meta
 

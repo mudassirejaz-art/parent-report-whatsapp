@@ -1,4 +1,4 @@
-"""Explicitly send one approved template to a Meta test recipient."""
+"""Exercise the WhatsApp template sender in mock mode or with a Meta test recipient."""
 
 import argparse
 import os
@@ -13,11 +13,26 @@ sys.path.insert(0, str(ROOT))
 from app.whatsapp import CloudSender
 
 
+def mock_send():
+    def respond(request):
+        if request.method != "POST" or str(request.url) != "https://graph.facebook.com/v99.0/123/messages":
+            return httpx.Response(404)
+        return httpx.Response(200, json={"messages": [{"id": "wamid.local_mock"}]})
+
+    sender = CloudSender("v99.0", "123", "local-mock-token")
+    with httpx.Client(transport=httpx.MockTransport(respond), trust_env=False) as client:
+        sender.send_template(client, "+12025550123", "hello_world", "en_US")
+    print("Mock WhatsApp template accepted locally. No message was sent.")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--send", action="store_true", help="Send one real test message.")
-    if not parser.parse_args().send:
-        parser.error("An explicit --send is required.")
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--mock", action="store_true", help="Test locally without credentials or network access.")
+    mode.add_argument("--send", action="store_true", help="Send one real test message.")
+    if parser.parse_args().mock:
+        mock_send()
+        return
     values = dotenv_values(ROOT / ".env")
 
     def setting(name, default=""):
